@@ -1,0 +1,85 @@
+name: digital-station
+
+x-py: &py
+  build: { context: ., dockerfile: services/Dockerfile }
+  image: digital-station/python:latest
+  restart: unless-stopped
+  env_file: .env
+  environment: &pyenv
+    REDIS_URL: redis://redis:6379/0
+  depends_on:
+    redis: { condition: service_healthy }
+
+services:
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--save", "", "--appendonly", "no"]
+    healthcheck: { test: ["CMD", "redis-cli", "ping"], interval: 3s, retries: 20 }
+
+  db:
+    image: timescale/timescaledb:latest-pg16
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes: [dbdata:/var/lib/postgresql/data]
+    healthcheck: { test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"], interval: 3s, retries: 30 }
+
+  simulator:
+    <<: *py
+    command: ["uvicorn", "main:app", "--app-dir", "services/simulator", "--host", "0.0.0.0", "--port", "8001"]
+    healthcheck: { test: ["CMD", "curl", "-fs", "http://localhost:8001/health"], interval: 5s, retries: 10 }
+    ports: ["127.0.0.1:8001:8001"]
+
+  ingest:
+    <<: *py
+    environment:
+      <<: *pyenv
+      SIMULATOR_WS: ws://simulator:8001/stream
+    command: ["uvicorn", "main:app", "--app-dir", "services/ingest", "--host", "0.0.0.0", "--port", "8002"]
+    healthcheck: { test: ["CMD", "curl", "-fs", "http://localhost:8002/health"], interval: 5s, retries: 10 }
+    ports: ["127.0.0.1:8002:8002"]
+
+  planner:
+    <<: *py
+    command: ["uvicorn", "main:app", "--app-dir", "services/planner", "--host", "0.0.0.0", "--port", "8003"]
+    healthcheck: { test: ["CMD", "curl", "-fs", "http://localhost:8003/health"], interval: 5s, retries: 10 }
+    ports: ["127.0.0.1:8003:8003"]
+
+  api:
+    <<: *py
+    environment:
+      <<: *pyenv
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+    command: ["uvicorn", "api.main:app", "--app-dir", "services", "--host", "0.0.0.0", "--port", "8000"]
+    depends_on:
+      redis: { condition: service_healthy }
+      db: { condition: service_healthy }
+    healthcheck: { test: ["CMD", "curl", "-fs", "http://localhost:8000/api/health"], interval: 5s, retries: 10 }
+    ports: ["127.0.0.1:8000:8000"]
+
+  frontend:
+    build: { context: ./frontend }
+    restart: unless-stopped
+    depends_on: [api]
+    ports: ["127.0.0.1:8080:80"]
+
+  prometheus:
+    image: prom/prometheus:latest
+    volumes: [./infra/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro]
+    ports: ["127.0.0.1:9090:9090"]
+
+  grafana:
+    image: grafana/grafana:latest
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD}
+      GF_AUTH_ANONYMOUS_ENABLED: "true"
+      GF_AUTH_ANONYMOUS_ORG_ROLE: Viewer
+    volumes:
+      - ./infra/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./infra/grafana/dashboards:/var/lib/grafana/dashboards:ro
+    depends_on: [prometheus]
+    ports: ["127.0.0.1:3000:3000"]
+
+volumes:
+  dbdata:

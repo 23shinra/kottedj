@@ -1,0 +1,12 @@
+global:
+  scrape_interval: 5s
+scrape_configs:
+  - job_name: simulator
+    static_configs: [{ targets: ["simulator:8001"] }]
+  - job_name: ingest
+    static_configs: [{ targets: ["ingest:8002"] }]
+  - job_name: planner
+    static_configs: [{ targets: ["planner:8003"] }]
+  - job_name: api
+    metrics_path: /metrics/
+    static_configs: [{ targets: ["api:8000"] }]

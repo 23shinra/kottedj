@@ -1,0 +1,33 @@
+{
+  "baseline": {
+    "departed": 134,
+    "avg_entry_wait_min": 28.8,
+    "p90_entry_wait_min": 82.4,
+    "max_entry_wait_min": 120.4,
+    "avg_dep_delay_min": 21.8,
+    "pass_avg_delay_min": 25.9,
+    "avg_dwell_min": 34.7,
+    "avg_resource_wait_min": 4.8,
+    "signal_stops": 114,
+    "queue_now": 12,
+    "avg_index": 63.9
+  },
+  "ai": {
+    "departed": 143,
+    "avg_entry_wait_min": 11.1,
+    "p90_entry_wait_min": 34.1,
+    "max_entry_wait_min": 78.9,
+    "avg_dep_delay_min": 5.5,
+    "pass_avg_delay_min": 2.9,
+    "avg_dwell_min": 33.2,
+    "avg_resource_wait_min": 3.1,
+    "signal_stops": 24,
+    "queue_now": 6,
+    "avg_index": 79.3
+  },
+  "solver_ms": {
+    "avg": 1024,
+    "p95": 1080,
+    "max": 1779
+  }
+}

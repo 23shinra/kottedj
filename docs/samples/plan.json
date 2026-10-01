@@ -1,0 +1,770 @@
+{
+ "type": "plan",
+ "plan": {
+  "sim_time": 6000,
+  "created_at": 1790839140.272743,
+  "variant": "balanced",
+  "variant_name": "Сбалансированный",
+  "assignments": {
+   "3501": {
+    "dep_at": 6320,
+    "track": "12"
+   },
+   "3502": {
+    "dep_at": 7627,
+    "track": "13",
+    "loco": "Л19",
+    "loco_at": 6847,
+    "crew": "Б19",
+    "crew_at": 7267
+   },
+   "2008": {
+    "dep_at": 6540,
+    "track": "4",
+    "crew": "Б16",
+    "crew_at": 6180
+   },
+   "3503": {
+    "dep_at": 9100,
+    "track": "11",
+    "loco": null,
+    "loco_from": "2013",
+    "loco_at": 8320,
+    "crew": "Б23",
+    "crew_at": 8740
+   },
+   "2012": {
+    "dep_at": 6920,
+    "track": "6",
+    "loco": "Л17",
+    "loco_at": 6140,
+    "crew": "Б17",
+    "crew_at": 6560
+   },
+   "111": {
+    "dep_at": 6060,
+    "track": "1"
+   },
+   "2011": {
+    "dep_at": 7745,
+    "track": "5",
+    "loco": "Л20",
+    "loco_at": 6965,
+    "crew": "Б20",
+    "crew_at": 7385
+   },
+   "3504": {
+    "dep_at": 11270,
+    "track": "14",
+    "loco": null,
+    "loco_from": "2017",
+    "loco_at": 10490,
+    "crew": null,
+    "crew_from": "2018",
+    "crew_at": 10910
+   },
+   "117": {
+    "dep_at": 6780,
+    "track": "3"
+   },
+   "2014": {
+    "dep_at": 7610,
+    "track": "9",
+    "loco": "Л18",
+    "loco_at": 6830,
+    "crew": "Б18",
+    "crew_at": 7250
+   },
+   "2016": {
+    "dep_at": 11750,
+    "track": "7",
+    "loco": null,
+    "loco_from": "2023",
+    "loco_at": 10970,
+    "crew": null,
+    "crew_from": "2017",
+    "crew_at": 11390
+   },
+   "2013": {
+    "dep_at": 8270,
+    "entry_at": 6080,
+    "track": "8",
+    "loco": "Л21",
+    "loco_at": 7490,
+    "crew": "Б21",
+    "crew_at": 7910
+   },
+   "113": {
+    "dep_at": 7280,
+    "entry_at": 6360,
+    "track": "1"
+   },
+   "115": {
+    "dep_at": 7416,
+    "entry_at": 6202,
+    "track": "2"
+   },
+   "2017": {
+    "dep_at": 10790,
+    "entry_at": 8570,
+    "track": "8",
+    "loco": null,
+    "loco_from": "2018",
+    "loco_at": 10010,
+    "crew": null,
+    "crew_from": "2019",
+    "crew_at": 10430
+   },
+   "2015": {
+    "dep_at": 13019,
+    "entry_at": 11090,
+    "track": "8",
+    "loco": null,
+    "loco_from": "2025",
+    "loco_at": 12239,
+    "crew": null,
+    "crew_from": "3507",
+    "crew_at": 12659
+   },
+   "2019": {
+    "dep_at": 10016,
+    "entry_at": 7100,
+    "track": "4",
+    "loco": null,
+    "loco_from": "2020",
+    "loco_at": 9236,
+    "crew": null,
+    "crew_from": "2013",
+    "crew_at": 9656
+   },
+   "119": {
+    "dep_at": 8278,
+    "entry_at": 7560,
+    "track": "3"
+   },
+   "2018": {
+    "dep_at": 9539,
+    "entry_at": 7910,
+    "track": "9",
+    "loco": null,
+    "loco_from": "3505",
+    "loco_at": 8759,
+    "crew": "Б24",
+    "crew_at": 9179
+   },
+   "3505": {
+    "dep_at": 12117,
+    "entry_at": 6845,
+    "track": "12",
+    "loco": null,
+    "loco_from": "3507",
+    "loco_at": 11337,
+    "crew": null,
+    "crew_from": "2026",
+    "crew_at": 11757
+   },
+   "2021": {
+    "dep_at": 11738,
+    "entry_at": 9839,
+    "track": "9",
+    "loco": null,
+    "loco_from": "2026",
+    "loco_at": 10958,
+    "crew": null,
+    "crew_from": "3506",
+    "crew_at": 11378
+   },
+   "2022": {
+    "dep_at": 13851,
+    "entry_at": 12038,
+    "track": "9",
+    "loco": null,
+    "loco_from": "2030",
+    "loco_at": 13071,
+    "crew": null,
+    "crew_from": "2029",
+    "crew_at": 13491
+   },
+   "2020": {
+    "dep_at": 8819,
+    "entry_at": 7236,
+    "track": "6",
+    "loco": "Л22",
+    "loco_at": 8039,
+    "crew": "Б22",
+    "crew_at": 8459
+   },
+   "2023": {
+    "dep_at": 11067,
+    "entry_at": 9119,
+    "track": "6",
+    "loco": null,
+    "loco_from": "3506",
+    "loco_at": 10287,
+    "crew": null,
+    "crew_from": "2020",
+    "crew_at": 10707
+   },
+   "2024": {
+    "dep_at": 14930,
+    "entry_at": 13319,
+    "track": "8",
+    "loco": null,
+    "loco_from": "2022",
+    "loco_at": 14150,
+    "crew": null,
+    "crew_from": "2030",
+    "crew_at": 14570
+   },
+   "3506": {
+    "dep_at": 13499,
+    "entry_at": 7927,
+    "track": "13",
+    "loco": null,
+    "loco_from": "2029",
+    "loco_at": 12719,
+    "crew": null,
+    "crew_from": "2021",
+    "crew_at": 13139
+   },
+   "3507": {
+    "dep_at": 17331,
+    "entry_at": 9417,
+    "track": "11",
+    "loco": null,
+    "loco_from": "2034",
+    "loco_at": 16551,
+    "crew": null,
+    "crew_from": "2028",
+    "crew_at": 16971
+   },
+   "2027": {
+    "dep_at": 16983,
+    "entry_at": 15230,
+    "track": "8",
+    "loco": null,
+    "loco_from": "2028",
+    "loco_at": 16203,
+    "crew": null,
+    "crew_from": "2024",
+    "crew_at": 16623
+   },
+   "2026": {
+    "dep_at": 10233,
+    "entry_at": 8608,
+    "track": "5",
+    "loco": null,
+    "loco_from": "2019",
+    "loco_at": 9453,
+    "crew": null,
+    "crew_from": "3505",
+    "crew_at": 9873
+   },
+   "2025": {
+    "dep_at": 12434,
+    "entry_at": 10533,
+    "track": "5",
+    "loco": null,
+    "loco_from": "2021",
+    "loco_at": 11654,
+    "crew": null,
+    "crew_from": "2023",
+    "crew_at": 12074
+   },
+   "2028": {
+    "dep_at": 16103,
+    "entry_at": 14151,
+    "track": "9",
+    "loco": null,
+    "loco_from": "2024",
+    "loco_at": 15323,
+    "crew": null,
+    "crew_from": "2031",
+    "crew_at": 15743
+   },
+   "121": {
+    "dep_at": 10287,
+    "entry_at": 9324,
+    "track": "2"
+   },
+   "123": {
+    "dep_at": 10467,
+    "entry_at": 9576,
+    "track": "3"
+   },
+   "2029": {
+    "dep_at": 15134,
+    "entry_at": 10647,
+    "track": "4",
+    "loco": null,
+    "loco_from": "2031",
+    "loco_at": 14354,
+    "crew": null,
+    "crew_from": "3508",
+    "crew_at": 14774
+   },
+   "2032": {
+    "dep_at": 18961,
+    "entry_at": 17283,
+    "track": "8",
+    "loco": null,
+    "loco_from": "2027",
+    "loco_at": 18181,
+    "crew": null,
+    "crew_from": "2027",
+    "crew_at": 18601
+   },
+   "2030": {
+    "dep_at": 13713,
+    "entry_at": 11367,
+    "track": "6",
+    "loco": null,
+    "loco_from": "2015",
+    "loco_at": 12933,
+    "crew": null,
+    "crew_from": "2025",
+    "crew_at": 13353
+   },
+   "2031": {
+    "dep_at": 14453,
+    "entry_at": 12734,
+    "track": "5",
+    "loco": null,
+    "loco_from": "3508",
+    "loco_at": 13673,
+    "crew": null,
+    "crew_from": "2015",
+    "crew_at": 14093
+   },
+   "125": {
+    "dep_at": 12175,
+    "entry_at": 11247,
+    "track": "1"
+   },
+   "127": {
+    "dep_at": 12480,
+    "entry_at": 11128,
+    "track": "2"
+   },
+   "129": {
+    "dep_at": 12614,
+    "entry_at": 11469,
+    "track": "3"
+   },
+   "3508": {
+    "dep_at": 15535,
+    "entry_at": 11937,
+    "track": "14",
+    "loco": null,
+    "loco_from": "3509",
+    "loco_at": 14755,
+    "crew": null,
+    "crew_from": "2022",
+    "crew_at": 15175
+   },
+   "2033": {
+    "dep_at": 20915,
+    "entry_at": 19261,
+    "track": "8",
+    "loco": null,
+    "loco_from": "2032",
+    "loco_at": 20135,
+    "crew": null,
+    "crew_from": "2032",
+    "crew_at": 20555
+   },
+   "3509": {
+    "dep_at": 17983,
+    "entry_at": 13133,
+    "track": "12",
+    "loco": null,
+    "loco_missing": true,
+    "crew": null,
+    "crew_from": "2034",
+    "crew_at": 17623
+   },
+   "2034": {
+    "dep_at": 16778,
+    "entry_at": 14803,
+    "track": "5",
+    "loco": null,
+    "loco_missing": true,
+    "crew": null,
+    "crew_from": "3509",
+    "crew_at": 16418
+   }
+  },
+  "solver": {
+   "engine": "cp-sat",
+   "status": "FEASIBLE",
+   "objective": 802427.0,
+   "bound": 259945.0,
+   "time_ms": 1011,
+   "vars": 723,
+   "constraints": 1084
+  },
+  "projected_kpi": {
+   "throughput_ratio": 0.938,
+   "departed_1h": 15,
+   "due_1h": 16,
+   "avg_deviation_min": 14.2,
+   "utilization": 0.75,
+   "conflicts": 2,
+   "avg_resource_wait_min": 8.1,
+   "avg_entry_wait_min": 31.0,
+   "queue_len": 14
+  },
+  "projected_index": {
+   "value": 74.6,
+   "grade": "B",
+   "category": {
+    "id": "warning",
+    "name": "Внимание",
+    "color": "#f5a524",
+    "reason": "Растут очередь и отклонения от графика, нужны решения диспетчера"
+   },
+   "factors": [
+    {
+     "id": "throughput",
+     "name": "Пропускная способность",
+     "weight": 0.25,
+     "score": 0.938,
+     "points": 23.4,
+     "loss": 1.6,
+     "why": "отправлено 15 из 16 по графику за час",
+     "description": "Отправлено поездов за последний час к числу поездов, которые к этому часу должны были уйти"
+    },
+    {
+     "id": "deviation",
+     "name": "Отклонение от графика",
+     "weight": 0.2,
+     "score": 0.645,
+     "points": 12.9,
+     "loss": 7.1,
+     "why": "среднее отклонение 14 мин",
+     "description": "Среднее отклонение фактического отправления от графика, мин"
+    },
+    {
+     "id": "utilization",
+     "name": "Загрузка путей",
+     "weight": 0.15,
+     "score": 1.0,
+     "points": 15.0,
+     "loss": 0.0,
+     "why": "загрузка в норме (75%)",
+     "description": "Доля занятых открытых путей; штраф и за простой путей, и за переполнение"
+    },
+    {
+     "id": "conflicts",
+     "name": "Конфликты маршрутов",
+     "weight": 0.15,
+     "score": 0.75,
+     "points": 11.2,
+     "loss": 3.8,
+     "why": "2 неразрешённых конфликтов",
+     "description": "Неразрешённые конфликты: пересечения маршрутов, занятые пути, нехватка ресурсов"
+    },
+    {
+     "id": "resource_idle",
+     "name": "Простой ресурсов",
+     "weight": 0.1,
+     "score": 0.73,
+     "points": 7.3,
+     "loss": 2.7,
+     "why": "ожидание локомотива/бригады 8 мин",
+     "description": "Простой локомотивов и бригад: среднее ожидание поездом локомотива/бригады, мин"
+    },
+    {
+     "id": "queue",
+     "name": "Очередь на подходе",
+     "weight": 0.15,
+     "score": 0.311,
+     "points": 4.7,
+     "loss": 10.3,
+     "why": "в очереди 14 поездов, ожидание 31 мин",
+     "description": "Среднее ожидание приёма поездами на подходе и у входного сигнала, мин"
+    }
+   ],
+   "top": [
+    {
+     "id": "queue",
+     "name": "Очередь на подходе",
+     "weight": 0.15,
+     "score": 0.311,
+     "points": 4.7,
+     "loss": 10.3,
+     "why": "в очереди 14 поездов, ожидание 31 мин",
+     "description": "Среднее ожидание приёма поездами на подходе и у входного сигнала, мин"
+    },
+    {
+     "id": "deviation",
+     "name": "Отклонение от графика",
+     "weight": 0.2,
+     "score": 0.645,
+     "points": 12.9,
+     "loss": 7.1,
+     "why": "среднее отклонение 14 мин",
+     "description": "Среднее отклонение фактического отправления от графика, мин"
+    },
+    {
+     "id": "conflicts",
+     "name": "Конфликты маршрутов",
+     "weight": 0.15,
+     "score": 0.75,
+     "points": 11.2,
+     "loss": 3.8,
+     "why": "2 неразрешённых конфликтов",
+     "description": "Неразрешённые конфликты: пересечения маршрутов, занятые пути, нехватка ресурсов"
+    },
+    {
+     "id": "resource_idle",
+     "name": "Простой ресурсов",
+     "weight": 0.1,
+     "score": 0.73,
+     "points": 7.3,
+     "loss": 2.7,
+     "why": "ожидание локомотива/бригады 8 мин",
+     "description": "Простой локомотивов и бригад: среднее ожидание поездом локомотива/бригады, мин"
+    },
+    {
+     "id": "throughput",
+     "name": "Пропускная способность",
+     "weight": 0.25,
+     "score": 0.938,
+     "points": 23.4,
+     "loss": 1.6,
+     "why": "отправлено 15 из 16 по графику за час",
+     "description": "Отправлено поездов за последний час к числу поездов, которые к этому часу должны были уйти"
+    }
+   ]
+  },
+  "trains_planned": 44,
+  "conflicts": [
+   {
+    "type": "route_crossing",
+    "severity": "medium",
+    "trains": [
+     "2017",
+     "2019"
+    ],
+    "at": 6402,
+    "text": "Пересечение маршрутов №2017 и №2019 в горловине W (07:46)",
+    "resolved": true,
+    "resolution": "№2019 пропускается первым, №2017 через 24 мин (путь 8)"
+   },
+   {
+    "type": "route_crossing",
+    "severity": "medium",
+    "trains": [
+     "2015",
+     "2018"
+    ],
+    "at": 6427,
+    "text": "Пересечение маршрутов №2015 и №2018 в горловине E (07:47)",
+    "resolved": true,
+    "resolution": "№2018 пропускается первым, №2015 через 53 мин (путь 8)"
+   },
+   {
+    "type": "route_crossing",
+    "severity": "medium",
+    "trains": [
+     "2019",
+     "119"
+    ],
+    "at": 6504,
+    "text": "Пересечение маршрутов №2019 и №119 в горловине W (07:48)",
+    "resolved": true,
+    "resolution": "№2019 пропускается первым, №119 через 7 мин (путь 3)"
+   },
+   {
+    "type": "route_crossing",
+    "severity": "medium",
+    "trains": [
+     "2021",
+     "2022"
+    ],
+    "at": 7028,
+    "text": "Пересечение маршрутов №2021 и №2022 в горловине E (07:57)",
+    "resolved": true,
+    "resolution": "№2021 пропускается первым, №2022 через 36 мин (путь 9)"
+   },
+   {
+    "type": "route_crossing",
+    "severity": "medium",
+    "trains": [
+     "2022",
+     "2020"
+    ],
+    "at": 7148,
+    "text": "Пересечение маршрутов №2022 и №2020 в горловине E (07:59)",
+    "resolved": true,
+    "resolution": "№2020 пропускается первым, №2022 через 80 мин (путь 9)"
+   },
+   {
+    "type": "route_crossing",
+    "severity": "medium",
+    "trains": [
+     "2025",
+     "2028"
+    ],
+    "at": 8639,
+    "text": "Пересечение маршрутов №2025 и №2028 в горловине E (08:23)",
+    "resolved": true,
+    "resolution": "№2025 пропускается первым, №2028 через 60 мин (путь 9)"
+   },
+   {
+    "type": "track_shortage",
+    "severity": "high",
+    "park": "G",
+    "at": 8400,
+    "text": "Нехватка путей в парке G в 08:20: нужно 5, открыто 4",
+    "resolved": true,
+    "resolution": "очередь переведена в слоты на подходе"
+   },
+   {
+    "type": "track_shortage",
+    "severity": "high",
+    "park": "PO",
+    "at": 6600,
+    "text": "Нехватка путей в парке PO в 07:50: нужно 7, открыто 4",
+    "resolved": true,
+    "resolution": "очередь переведена в слоты на подходе"
+   },
+   {
+    "type": "loco_shortage",
+    "severity": "high",
+    "at": 6000,
+    "text": "Дефицит локомотивов на ближайший час: нужно 24, доступно 17",
+    "resolved": false,
+    "resolution": "нужен резерв"
+   },
+   {
+    "type": "crew_shortage",
+    "severity": "high",
+    "at": 6000,
+    "text": "Дефицит бригад на ближайший час: нужно 25, доступно 14",
+    "resolved": true,
+    "resolution": "ресурсы перераспределены по времени готовности"
+   }
+  ],
+  "recommendations": [
+   {
+    "id": "add_loco",
+    "severity": "critical",
+    "kind": "resource",
+    "title": "Вывести резервный локомотив",
+    "text": "На горизонте не хватает локомотивов для: №3509, №2034",
+    "action": {
+     "type": "add_loco"
+    }
+   },
+   {
+    "id": "open_10",
+    "severity": "high",
+    "kind": "open_reserve",
+    "title": "Открыть резервный путь 10",
+    "text": "Через 6 мин дефицит путей ПО-парка: 10 грузовых будут ждать > 10 мин",
+    "action": {
+     "type": "open_track",
+     "track": "10"
+    }
+   },
+   {
+    "id": "reroute_2032",
+    "severity": "high",
+    "kind": "reroute",
+    "title": "Направить №2032 по обходу",
+    "text": "Прогноз ожидания приёма 120 мин; перенаправление разгрузит станцию",
+    "action": {
+     "type": "reroute",
+     "train": "2032"
+    }
+   },
+   {
+    "id": "reroute_2033",
+    "severity": "high",
+    "kind": "reroute",
+    "title": "Направить №2033 по обходу",
+    "text": "Прогноз ожидания приёма 115 мин; перенаправление разгрузит станцию",
+    "action": {
+     "type": "reroute",
+     "train": "2033"
+    }
+   },
+   {
+    "id": "pass_113",
+    "severity": "medium",
+    "kind": "warning",
+    "title": "Пассажирский №113: опоздание 13 мин",
+    "text": "Проверьте приоритет маршрута и занятость платформ",
+    "action": null
+   },
+   {
+    "id": "pass_115",
+    "severity": "medium",
+    "kind": "warning",
+    "title": "Пассажирский №115: опоздание 14 мин",
+    "text": "Проверьте приоритет маршрута и занятость платформ",
+    "action": null
+   },
+   {
+    "id": "pass_119",
+    "severity": "medium",
+    "kind": "warning",
+    "title": "Пассажирский №119: опоздание 11 мин",
+    "text": "Проверьте приоритет маршрута и занятость платформ",
+    "action": null
+   },
+   {
+    "id": "pass_123",
+    "severity": "medium",
+    "kind": "warning",
+    "title": "Пассажирский №123: опоздание 5 мин",
+    "text": "Проверьте приоритет маршрута и занятость платформ",
+    "action": null
+   },
+   {
+    "id": "slot_2015",
+    "severity": "info",
+    "kind": "slot",
+    "title": "№2015: вход в 09:04 на путь 8",
+    "text": "Удержать на предыдущей станции, отправить к 08:54: без остановки у входного сигнала (−77 мин стоянки)",
+    "action": null
+   },
+   {
+    "id": "slot_2017",
+    "severity": "info",
+    "kind": "slot",
+    "title": "№2017: вход в 08:22 на путь 8",
+    "text": "Удержать на предыдущей станции, отправить к 08:12: без остановки у входного сигнала (−36 мин стоянки)",
+    "action": null
+   },
+   {
+    "id": "slot_2018",
+    "severity": "info",
+    "kind": "slot",
+    "title": "№2018: вход в 08:11 на путь 9",
+    "text": "Снизить скорость до 19 км/ч: без остановки у входного сигнала (−23 мин стоянки)",
+    "action": null
+   },
+   {
+    "id": "loco_2012",
+    "severity": "info",
+    "kind": "resource_plan",
+    "title": "Подать Л17 к пути 6 в 07:42",
+    "text": "Локомотив будет готов к отправлению №2012 без ожидания",
+    "action": null
+   },
+   {
+    "id": "loco_2014",
+    "severity": "info",
+    "kind": "resource_plan",
+    "title": "Подать Л18 к пути 9 в 07:53",
+    "text": "Локомотив будет готов к отправлению №2014 без ожидания",
+    "action": null
+   }
+  ],
+  "total_ms": 1011,
+  "version": 42
+ }
+}

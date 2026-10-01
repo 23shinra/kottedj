@@ -1,0 +1,95 @@
+# Цифровая модель станции «Узловая» (обезличенный демо-пример).
+# Меняется без перекомпиляции: сервисы перечитывают файл при старте и по POST /config/reload.
+name: "Станция Узловая (демо)"
+start_clock: "06:00"          # время суток, соответствующее sim_time = 0
+
+throats:
+  - id: W
+    name: "Западная горловина"
+    ladders:                  # стрелочные улицы: одна улица = один маршрут за раз
+      - id: WA
+        switches: [W1, W3, W5]
+      - id: WB
+        switches: [W2, W4, W6]
+  - id: E
+    name: "Восточная горловина"
+    ladders:
+      - id: EA
+        switches: [E1, E3, E5]
+      - id: EB
+        switches: [E2, E4, E6]
+
+approaches:
+  - id: W
+    name: "Перегон Западный (от ст. Луговая)"
+    throat: W
+    length_m: 15000
+  - id: E
+    name: "Перегон Восточный (от ст. Озёрная)"
+    throat: E
+    length_m: 15000
+
+parks:
+  - id: P
+    name: "Пассажирский парк"
+  - id: PO
+    name: "Приёмо-отправочный парк"
+  - id: G
+    name: "Грузовой парк"
+
+# length_m — полезная длина пути; accepts — какие категории поездов можно принимать.
+# ladders — через какую стрелочную улицу каждой горловины проходит маршрут на путь.
+tracks:
+  - {id: "1",  park: P,  length_m: 600,  platform: true,  electrified: true,  cargo: false, accepts: [pass],                 ladders: {W: WA, E: EA}}
+  - {id: "2",  park: P,  length_m: 650,  platform: true,  electrified: true,  cargo: false, accepts: [pass],                 ladders: {W: WA, E: EA}}
+  - {id: "3",  park: P,  length_m: 700,  platform: true,  electrified: true,  cargo: false, accepts: [pass],                 ladders: {W: WA, E: EA}}
+  - {id: "4",  park: P,  length_m: 720,  platform: true,  electrified: true,  cargo: false, accepts: [pass, freight_transit], ladders: {W: WA, E: EA}}
+  - {id: "5",  park: PO, length_m: 850,  platform: false, electrified: true,  cargo: false, accepts: [freight_transit],      ladders: {W: WA, E: EA}}
+  - {id: "6",  park: PO, length_m: 900,  platform: false, electrified: true,  cargo: false, accepts: [freight_transit],      ladders: {W: WA, E: EA}}
+  - {id: "7",  park: PO, length_m: 1050, platform: false, electrified: true,  cargo: false, accepts: [freight_transit],      ladders: {W: WB, E: EB}}
+  - {id: "8",  park: PO, length_m: 1050, platform: false, electrified: true,  cargo: false, accepts: [freight_transit],      ladders: {W: WB, E: EB}}
+  - {id: "9",  park: PO, length_m: 950,  platform: false, electrified: true,  cargo: false, accepts: [freight_transit],      ladders: {W: WB, E: EB}}
+  - {id: "10", park: PO, length_m: 900,  platform: false, electrified: true,  cargo: false, accepts: [freight_transit],      ladders: {W: WB, E: EB}, reserve: true}
+  - {id: "11", park: G,  length_m: 600,  platform: false, electrified: true,  cargo: true,  accepts: [freight_local],        ladders: {W: WB, E: EB}}
+  - {id: "12", park: G,  length_m: 650,  platform: false, electrified: true,  cargo: true,  accepts: [freight_local],        ladders: {W: WB, E: EB}}
+  - {id: "13", park: G,  length_m: 750,  platform: false, electrified: false, cargo: true,  accepts: [freight_local],        ladders: {W: WB, E: EB}}
+  - {id: "14", park: G,  length_m: 500,  platform: false, electrified: false, cargo: true,  accepts: [freight_local],        ladders: {W: WB, E: EB}}
+
+# Категории поездов. Времена в минутах модельного времени.
+categories:
+  pass:
+    name: "Пассажирский"
+    priority: 10
+    length_m: [300, 650]
+    service_min: [8, 14]        # стоянка: посадка/высадка
+    needs_loco: false
+    needs_crew: false
+    electric: true
+  freight_transit:
+    name: "Грузовой транзитный"
+    priority: 3
+    length_m: [650, 1040]
+    service_min: [20, 30]       # техосмотр, опробование тормозов
+    needs_loco: true            # смена локомотива
+    needs_crew: true            # смена локомотивной бригады
+    electric: true
+  freight_local:
+    name: "Грузовой местный"
+    priority: 1
+    length_m: [400, 740]
+    service_min: [50, 80]       # погрузка/выгрузка
+    needs_loco: true
+    needs_crew: true
+    electric: false
+
+resources:
+  locos: 6                      # поездные локомотивы в депо (восточная сторона)
+  crews: 8                      # локомотивные бригады
+  loco_prep_min: 12             # подача из депо + прицепка + опробование тормозов
+  crew_prep_min: 5              # явка и приёмка локомотива
+  loco_turnaround_min: 25       # отцепленный локомотив: в депо и экипировка
+  crew_rest_min: 45             # прибывшая бригада: отдых перед новой поездкой
+
+timing:
+  throat_min: 3                 # занятие стрелочной улицы при приёме/отправлении
+  track_buffer_min: 2           # технологический интервал между поездами на одном пути

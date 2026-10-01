@@ -1,0 +1,515 @@
+{
+ "type": "hello",
+ "station": {
+  "name": "Станция Узловая (демо)",
+  "parks": [
+   {
+    "id": "P",
+    "name": "Пассажирский парк"
+   },
+   {
+    "id": "PO",
+    "name": "Приёмо-отправочный парк"
+   },
+   {
+    "id": "G",
+    "name": "Грузовой парк"
+   }
+  ],
+  "throats": [
+   {
+    "id": "W",
+    "name": "Западная горловина",
+    "ladders": [
+     {
+      "id": "WA",
+      "switches": [
+       "W1",
+       "W3",
+       "W5"
+      ]
+     },
+     {
+      "id": "WB",
+      "switches": [
+       "W2",
+       "W4",
+       "W6"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "E",
+    "name": "Восточная горловина",
+    "ladders": [
+     {
+      "id": "EA",
+      "switches": [
+       "E1",
+       "E3",
+       "E5"
+      ]
+     },
+     {
+      "id": "EB",
+      "switches": [
+       "E2",
+       "E4",
+       "E6"
+      ]
+     }
+    ]
+   }
+  ],
+  "approaches": [
+   {
+    "id": "W",
+    "name": "Перегон Западный (от ст. Луговая)",
+    "throat": "W",
+    "length_m": 15000
+   },
+   {
+    "id": "E",
+    "name": "Перегон Восточный (от ст. Озёрная)",
+    "throat": "E",
+    "length_m": 15000
+   }
+  ],
+  "tracks": [
+   {
+    "id": "1",
+    "park": "P",
+    "length_m": 600,
+    "platform": true,
+    "electrified": true,
+    "cargo": false,
+    "accepts": [
+     "pass"
+    ],
+    "ladders": {
+     "W": "WA",
+     "E": "EA"
+    },
+    "reserve": false
+   },
+   {
+    "id": "2",
+    "park": "P",
+    "length_m": 650,
+    "platform": true,
+    "electrified": true,
+    "cargo": false,
+    "accepts": [
+     "pass"
+    ],
+    "ladders": {
+     "W": "WA",
+     "E": "EA"
+    },
+    "reserve": false
+   },
+   {
+    "id": "3",
+    "park": "P",
+    "length_m": 700,
+    "platform": true,
+    "electrified": true,
+    "cargo": false,
+    "accepts": [
+     "pass"
+    ],
+    "ladders": {
+     "W": "WA",
+     "E": "EA"
+    },
+    "reserve": false
+   },
+   {
+    "id": "4",
+    "park": "P",
+    "length_m": 720,
+    "platform": true,
+    "electrified": true,
+    "cargo": false,
+    "accepts": [
+     "pass",
+     "freight_transit"
+    ],
+    "ladders": {
+     "W": "WA",
+     "E": "EA"
+    },
+    "reserve": false
+   },
+   {
+    "id": "5",
+    "park": "PO",
+    "length_m": 850,
+    "platform": false,
+    "electrified": true,
+    "cargo": false,
+    "accepts": [
+     "freight_transit"
+    ],
+    "ladders": {
+     "W": "WA",
+     "E": "EA"
+    },
+    "reserve": false
+   },
+   {
+    "id": "6",
+    "park": "PO",
+    "length_m": 900,
+    "platform": false,
+    "electrified": true,
+    "cargo": false,
+    "accepts": [
+     "freight_transit"
+    ],
+    "ladders": {
+     "W": "WA",
+     "E": "EA"
+    },
+    "reserve": false
+   },
+   {
+    "id": "7",
+    "park": "PO",
+    "length_m": 1050,
+    "platform": false,
+    "electrified": true,
+    "cargo": false,
+    "accepts": [
+     "freight_transit"
+    ],
+    "ladders": {
+     "W": "WB",
+     "E": "EB"
+    },
+    "reserve": false
+   },
+   {
+    "id": "8",
+    "park": "PO",
+    "length_m": 1050,
+    "platform": false,
+    "electrified": true,
+    "cargo": false,
+    "accepts": [
+     "freight_transit"
+    ],
+    "ladders": {
+     "W": "WB",
+     "E": "EB"
+    },
+    "reserve": false
+   },
+   {
+    "id": "9",
+    "park": "PO",
+    "length_m": 950,
+    "platform": false,
+    "electrified": true,
+    "cargo": false,
+    "accepts": [
+     "freight_transit"
+    ],
+    "ladders": {
+     "W": "WB",
+     "E": "EB"
+    },
+    "reserve": false
+   },
+   {
+    "id": "10",
+    "park": "PO",
+    "length_m": 900,
+    "platform": false,
+    "electrified": true,
+    "cargo": false,
+    "accepts": [
+     "freight_transit"
+    ],
+    "ladders": {
+     "W": "WB",
+     "E": "EB"
+    },
+    "reserve": true
+   },
+   {
+    "id": "11",
+    "park": "G",
+    "length_m": 600,
+    "platform": false,
+    "electrified": true,
+    "cargo": true,
+    "accepts": [
+     "freight_local"
+    ],
+    "ladders": {
+     "W": "WB",
+     "E": "EB"
+    },
+    "reserve": false
+   },
+   {
+    "id": "12",
+    "park": "G",
+    "length_m": 650,
+    "platform": false,
+    "electrified": true,
+    "cargo": true,
+    "accepts": [
+     "freight_local"
+    ],
+    "ladders": {
+     "W": "WB",
+     "E": "EB"
+    },
+    "reserve": false
+   },
+   {
+    "id": "13",
+    "park": "G",
+    "length_m": 750,
+    "platform": false,
+    "electrified": false,
+    "cargo": true,
+    "accepts": [
+     "freight_local"
+    ],
+    "ladders": {
+     "W": "WB",
+     "E": "EB"
+    },
+    "reserve": false
+   },
+   {
+    "id": "14",
+    "park": "G",
+    "length_m": 500,
+    "platform": false,
+    "electrified": false,
+    "cargo": true,
+    "accepts": [
+     "freight_local"
+    ],
+    "ladders": {
+     "W": "WB",
+     "E": "EB"
+    },
+    "reserve": false
+   }
+  ],
+  "categories": {
+   "pass": {
+    "id": "pass",
+    "name": "Пассажирский",
+    "priority": 10,
+    "length_m": [
+     300,
+     650
+    ],
+    "service_min": [
+     8,
+     14
+    ],
+    "needs_loco": false,
+    "needs_crew": false,
+    "electric": true
+   },
+   "freight_transit": {
+    "id": "freight_transit",
+    "name": "Грузовой транзитный",
+    "priority": 3,
+    "length_m": [
+     650,
+     1040
+    ],
+    "service_min": [
+     20,
+     30
+    ],
+    "needs_loco": true,
+    "needs_crew": true,
+    "electric": true
+   },
+   "freight_local": {
+    "id": "freight_local",
+    "name": "Грузовой местный",
+    "priority": 1,
+    "length_m": [
+     400,
+     740
+    ],
+    "service_min": [
+     50,
+     80
+    ],
+    "needs_loco": true,
+    "needs_crew": true,
+    "electric": false
+   }
+  },
+  "start_clock": "06:00",
+  "resources": {
+   "locos": 6,
+   "crews": 8,
+   "loco_prep_min": 12,
+   "crew_prep_min": 5,
+   "loco_turnaround_min": 25,
+   "crew_rest_min": 45
+  }
+ },
+ "index_config": {
+  "factors": {
+   "throughput": {
+    "name": "Пропускная способность",
+    "weight": 0.25,
+    "description": "Отправлено поездов за последний час к числу поездов, которые к этому часу должны были уйти"
+   },
+   "deviation": {
+    "name": "Отклонение от графика",
+    "weight": 0.2,
+    "worst_min": 40,
+    "description": "Среднее отклонение фактического отправления от графика, мин"
+   },
+   "utilization": {
+    "name": "Загрузка путей",
+    "weight": 0.15,
+    "optimal": [
+     0.55,
+     0.85
+    ],
+    "description": "Доля занятых открытых путей; штраф и за простой путей, и за переполнение"
+   },
+   "conflicts": {
+    "name": "Конфликты маршрутов",
+    "weight": 0.15,
+    "worst_count": 8,
+    "description": "Неразрешённые конфликты: пересечения маршрутов, занятые пути, нехватка ресурсов"
+   },
+   "resource_idle": {
+    "name": "Простой ресурсов",
+    "weight": 0.1,
+    "worst_min": 30,
+    "description": "Простой локомотивов и бригад: среднее ожидание поездом локомотива/бригады, мин"
+   },
+   "queue": {
+    "name": "Очередь на подходе",
+    "weight": 0.15,
+    "worst_min": 45,
+    "description": "Среднее ожидание приёма поездами на подходе и у входного сигнала, мин"
+   }
+  },
+  "categories": [
+   {
+    "id": "norm",
+    "name": "Норма",
+    "min": 75,
+    "color": "#2fbf71",
+    "reason": "Станция работает по графику, резерв пропускной способности есть"
+   },
+   {
+    "id": "warning",
+    "name": "Внимание",
+    "min": 50,
+    "color": "#f5a524",
+    "reason": "Растут очередь и отклонения от графика, нужны решения диспетчера"
+   },
+   {
+    "id": "critical",
+    "name": "Критично",
+    "min": 0,
+    "color": "#f04438",
+    "reason": "Станция перегружена: поезда простаивают, график срывается"
+   }
+  ],
+  "grades": [
+   {
+    "grade": "A",
+    "min": 85
+   },
+   {
+    "grade": "B",
+    "min": 70
+   },
+   {
+    "grade": "C",
+    "min": 55
+   },
+   {
+    "grade": "D",
+    "min": 40
+   },
+   {
+    "grade": "E",
+    "min": 0
+   }
+  ]
+ },
+ "planner_config": {
+  "horizon_min": 150,
+  "freeze_min": 2,
+  "replan_interval_s": 2.0,
+  "incident_debounce_ms": 200,
+  "solver": {
+   "time_limit_s": 1.5,
+   "variant_time_limit_s": 1.0,
+   "workers": 8
+  },
+  "auto_apply_best_variant": true,
+  "objective": {
+   "entry_delay": 1.0,
+   "departure_delay": 1.5,
+   "track_change": 30,
+   "unassigned_resource": 5000,
+   "starvation_weight": 8,
+   "starvation_after_min": 30
+  },
+  "variants": [
+   {
+    "id": "balanced",
+    "name": "Сбалансированный",
+    "description": "Минимум взвешенной задержки всех поездов",
+    "priority_scale": {
+     "pass": 1.0,
+     "freight_transit": 1.0,
+     "freight_local": 1.0
+    },
+    "entry_delay": 1.0,
+    "departure_delay": 1.5
+   },
+   {
+    "id": "passenger_first",
+    "name": "Пассажирские в приоритете",
+    "description": "Пассажирские по графику любой ценой, грузовые ждут",
+    "priority_scale": {
+     "pass": 4.0,
+     "freight_transit": 0.7,
+     "freight_local": 0.5
+    },
+    "entry_delay": 1.0,
+    "departure_delay": 2.0
+   },
+   {
+    "id": "throughput",
+    "name": "Максимум пропускной",
+    "description": "Освободить пути быстрее: минимум суммарного времени занятия",
+    "priority_scale": {
+     "pass": 1.0,
+     "freight_transit": 1.5,
+     "freight_local": 1.5
+    },
+    "entry_delay": 2.0,
+    "departure_delay": 1.0
+   }
+  ],
+  "forecast": {
+   "window_min": 60,
+   "reroute_delay_min": 35
+  }
+ }
+}

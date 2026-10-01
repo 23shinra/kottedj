@@ -1,0 +1,44 @@
+# Параметры ИИ-планировщика (CP-SAT, OR-Tools). Меняются без перекомпиляции.
+horizon_min: 150                # горизонт планирования (модельное время)
+freeze_min: 2                   # «замороженная» зона: не переносим вход поезда, если до него < 2 мин
+replan_interval_s: 2.0          # плановый пересчёт (реальное время)
+incident_debounce_ms: 200       # склейка всплеска инцидентов в один пересчёт
+solver:
+  time_limit_s: 1.5             # лимит CP-SAT на один пересчёт
+  variant_time_limit_s: 1.0     # лимит на каждый из вариантов при инциденте
+  workers: 9
+auto_apply_best_variant: true   # автоперепланирование: сразу применить лучший вариант
+
+# Веса целевой функции: Σ prio·delay + ...
+objective:
+  entry_delay: 1.0              # задержка приёма (на подходе)
+  departure_delay: 1.5          # задержка отправления относительно графика
+  track_change: 30              # штраф (сек) за смену уже назначенного пути, для стабильности плана
+  unassigned_resource: 5000     # штраф, если на горизонте не хватает локомотива/бригады
+  starvation_weight: 8          # доп. вес ожидания сверх порога (защита от «голодания» местных грузовых)
+  starvation_after_min: 30
+
+# Профили вариантов при нештатной ситуации
+variants:
+  - id: balanced
+    name: "Сбалансированный"
+    description: "Минимум взвешенной задержки всех поездов"
+    priority_scale: {pass: 1.0, freight_transit: 1.0, freight_local: 1.0}
+    entry_delay: 1.0
+    departure_delay: 1.5
+  - id: passenger_first
+    name: "Пассажирские в приоритете"
+    description: "Пассажирские по графику любой ценой, грузовые ждут"
+    priority_scale: {pass: 4.0, freight_transit: 0.7, freight_local: 0.5}
+    entry_delay: 1.0
+    departure_delay: 2.0
+  - id: throughput
+    name: "Максимум пропускной"
+    description: "Освободить пути быстрее: минимум суммарного времени занятия"
+    priority_scale: {pass: 1.0, freight_transit: 1.5, freight_local: 1.5}
+    entry_delay: 2.0
+    departure_delay: 1.0
+
+forecast:
+  window_min: 60                # прогноз дефицита на 60 мин вперёд
+  reroute_delay_min: 35         # предлагать обход, если прогноз задержки грузового > 35 мин

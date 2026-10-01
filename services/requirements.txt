@@ -1,0 +1,12 @@
+fastapi==0.115.*
+uvicorn[standard]==0.32.*
+websockets>=13
+redis>=5.2
+asyncpg>=0.30
+pydantic>=2.9
+pyyaml>=6
+ortools>=9.11
+prometheus-client>=0.21
+structlog>=24.4
+pyjwt>=2.9
+reportlab>=4.2
