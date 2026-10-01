@@ -11,6 +11,7 @@ import copy
 import os
 import random
 import time
+import traceback
 from contextlib import asynccontextmanager
 from typing import Any
 
@@ -149,7 +150,10 @@ class Simulator:
                 self._acc += self.time_scale * dt_real
                 dt_sim = int(self._acc // 5) * 5
                 self._acc -= dt_sim
-                self.tick(dt_sim)
+                try:
+                    self.tick(dt_sim)
+                except Exception as e:  # noqa: BLE001 — сбой шага не должен останавливать модель навсегда
+                    log.error("tick_failed", sim_time=self.worlds["ai"].t, error=repr(e), trace=traceback.format_exc())
             next_t += dt_real
             await asyncio.sleep(max(0.0, next_t - time.perf_counter()))
             if time.perf_counter() - next_t > 1.0:

@@ -328,7 +328,7 @@ class World:
         tr.regulated, tr.advisory_kmh, tr.reason = False, None, None
         tr.status = APPROACHING
         pa = self.plan_for(tr.id)
-        if pa is not None:
+        if pa is not None and pa.get("entry_at") is not None:
             slot = int(pa["entry_at"])
             free_eta = t + tr.pos_m / s.vmax_ms
             if slot > free_eta + 30:
@@ -399,6 +399,8 @@ class World:
                 for tid in order:
                     tr = self.trains[tid]
                     pa = self.plan_for(tid)
+                    if pa is not None and pa.get("entry_at") is None:
+                        pa = None
                     track = None
                     if pa and pa.get("track") and self.track_free(pa["track"]) and \
                             pa["track"] in self.station.compatible(tr.spec.cat, tr.spec.length_m, self.closed_set()):
@@ -562,7 +564,7 @@ class World:
         """Не занимать горловину, если по плану через неё скоро принимается другой поезд."""
         st = self.station
         for oid, a in (self.plan or {}).get("assignments", {}).items():
-            if oid == tid or not a.get("track"):
+            if oid == tid or not a.get("track") or a.get("entry_at") is None:
                 continue
             o = self.trains.get(oid)
             if not o or o.status not in (AT_SIGNAL, APPROACHING):
