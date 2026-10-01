@@ -101,11 +101,11 @@ export function GanttChart() {
         {
           type: 'rect',
           shape: { x: cs.x, y: y - h / 2, width: cs.width, height: h },
-          style: { fill: item.park === 'P' ? 'rgba(57,135,229,0.035)' : item.park === 'G' ? 'rgba(25,158,112,0.035)' : 'rgba(217,89,38,0.03)' },
+          style: { fill: params.dataIndex % 2 ? 'rgba(255,255,255,0.015)' : 'transparent' },
         },
       ];
       if (item.first && params.dataIndex > 0) {
-        children.push({ type: 'line', shape: { x1: cs.x - 46, y1: y - h / 2, x2: cs.x + cs.width, y2: y - h / 2 }, style: { stroke: '#2b3a57', lineWidth: 1 } });
+        children.push({ type: 'line', shape: { x1: cs.x - 46, y1: y - h / 2, x2: cs.x + cs.width, y2: y - h / 2 }, style: { stroke: SEMANTIC.axis, lineWidth: 1 } });
       }
       return { type: 'group', children, silent: true };
     };
@@ -128,8 +128,8 @@ export function GanttChart() {
             shape: { ...rect, r: 3 },
             style:
               kind === 'closed'
-                ? { fill: 'rgba(240,68,56,0.16)', stroke: 'rgba(240,68,56,0.7)', lineWidth: 1, lineDash: [4, 3] }
-                : { fill: 'rgba(138,155,181,0.05)', stroke: 'rgba(138,155,181,0.45)', lineWidth: 1, lineDash: [3, 3] },
+                ? { fill: echarts.color.modifyAlpha(SEMANTIC.crit, 0.16), stroke: echarts.color.modifyAlpha(SEMANTIC.crit, 0.7), lineWidth: 1, lineDash: [4, 3] }
+                : { fill: echarts.color.modifyAlpha(SEMANTIC.muted, 0.05), stroke: echarts.color.modifyAlpha(SEMANTIC.muted, 0.45), lineWidth: 1, lineDash: [3, 3] },
           },
           {
             type: 'text',
@@ -137,7 +137,7 @@ export function GanttChart() {
               x: rect.x + rect.width - 6,
               y: rect.y + rect.height / 2,
               text: kind === 'closed' ? `закрыт до ${clock(api.value(2))}` : 'резерв',
-              fill: kind === 'closed' ? '#ff8a80' : SEMANTIC.muted,
+              fill: kind === 'closed' ? SEMANTIC.critText : SEMANTIC.muted,
               font: `600 10px ${FONT}`,
               align: 'right',
               verticalAlign: 'middle',
@@ -166,7 +166,7 @@ export function GanttChart() {
           shape: { ...rect, r: 3 },
           style: plan
             ? { fill: echarts.color.modifyAlpha(c, 0.22), stroke: meta.missing ? SEMANTIC.crit : c, lineWidth: meta.missing ? 1.5 : 1, lineDash: [4, 2] }
-            : { fill: echarts.color.modifyAlpha(c, 0.88), stroke: 'rgba(11,18,32,0.9)', lineWidth: 1 },
+            : { fill: echarts.color.modifyAlpha(c, 0.88), stroke: SEMANTIC.surface, lineWidth: 1 },
         },
       ];
       if (rect.width > 34) {
@@ -176,7 +176,7 @@ export function GanttChart() {
             x: rect.x + 5,
             y: rect.y + rect.height / 2,
             text: `${meta.missing ? '⚠ ' : ''}${meta.id}`,
-            fill: plan ? '#d7e0ee' : '#fff',
+            fill: plan ? SEMANTIC.text2 : '#fff',
             font: `${plan ? 500 : 600} 10px ${FONT}`,
             verticalAlign: 'middle',
             overflow: 'truncate',

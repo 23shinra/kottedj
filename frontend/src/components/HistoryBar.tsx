@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { FileSpreadsheet, FileText, History, Radio, RotateCcw } from 'lucide-react';
+import { FileSpreadsheet, FileText, History, RotateCcw } from 'lucide-react';
 import { useStore } from '../store';
 import { api, downloadReport, errText } from '../api/rest';
 import { useDebounced, useNow } from '../utils/hooks';
@@ -74,20 +74,19 @@ export function HistoryBar() {
   return (
     <footer className="histbar" aria-label="История и отчёты">
       <div className="hist-label">
-        <History size={15} />
+        <History size={14} aria-hidden="true" />
         {hv ? (
           <span className="hist-state warn">
-            Просмотр истории <b className="num">{histSim != null ? clock(histSim) : '…'}</b>
+            История <b className="num">{histSim != null ? clock(histSim) : '…'}</b>
             <span className="muted num"> ({wallClock(hv.ts)})</span>
             {hv.loading && <span className="muted"> · загрузка…</span>}
           </span>
         ) : (
-          <span className="hist-state ok">
-            <Radio size={13} /> Онлайн
-          </span>
+          <span className="hist-state">Онлайн · перемотка за 15 мин</span>
         )}
       </div>
       <div className="hist-slider">
+        <span aria-hidden="true">−15 мин</span>
         <input
           type="range"
           min={min}
@@ -99,12 +98,7 @@ export function HistoryBar() {
           aria-valuetext={hv ? `Просмотр ${wallClock(hv.ts)}` : 'Онлайн'}
           style={{ ['--p' as string]: `${((value - min) / WINDOW_MS) * 100}%` }}
         />
-        <div className="hist-ticks" aria-hidden="true">
-          <span>−15 мин</span>
-          <span>−10</span>
-          <span>−5</span>
-          <span>сейчас</span>
-        </div>
+        <span aria-hidden="true">сейчас</span>
       </div>
       {hv && (
         <button className="btn btn-xs btn-warn" onClick={live}>
@@ -115,8 +109,7 @@ export function HistoryBar() {
         {link &&
           (['simulator', 'ingest', 'planner'] as const).map((k) =>
             link[k] != null ? (
-              <span key={k} className={`link-st ${link[k] === 'up' ? 'up' : 'down'}`} title={`${k}: ${link[k]}`}>
-                <i />
+              <span key={k} className={`status ${link[k] === 'up' ? 'status-ok' : 'status-crit'}`} title={`${k}: ${link[k]}`}>
                 {k === 'simulator' ? 'симулятор' : k === 'ingest' ? 'приём данных' : 'оптимизатор'}
               </span>
             ) : null,

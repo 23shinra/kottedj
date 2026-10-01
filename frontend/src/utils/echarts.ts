@@ -7,6 +7,7 @@ import {
   MarkAreaComponent,
   LegendComponent,
   AxisPointerComponent,
+  TitleComponent,
 } from 'echarts/components';
 import { CanvasRenderer } from 'echarts/renderers';
 import { SEMANTIC } from './theme';
@@ -21,6 +22,7 @@ echarts.use([
   MarkAreaComponent,
   LegendComponent,
   AxisPointerComponent,
+  TitleComponent,
   CanvasRenderer,
 ]);
 
@@ -29,17 +31,17 @@ export { echarts };
 export const FONT = '"Inter Variable", Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif';
 
 export const tooltipBase = {
-  backgroundColor: 'rgba(14,22,37,0.97)',
-  borderColor: '#2b3a57',
+  backgroundColor: SEMANTIC.surface2,
+  borderColor: SEMANTIC.axis,
   borderWidth: 1,
-  padding: [8, 10],
+  padding: [6, 8],
   textStyle: { color: SEMANTIC.text, fontSize: 12, fontFamily: FONT },
-  extraCssText: 'box-shadow:0 8px 24px rgba(0,0,0,.45);border-radius:8px;',
+  extraCssText: 'box-shadow:0 6px 18px rgba(0,0,0,.45);border-radius:4px;',
 };
 
 export const axisCommon = {
-  axisLine: { lineStyle: { color: '#2a3956' } },
-  axisTick: { lineStyle: { color: '#2a3956' } },
+  axisLine: { lineStyle: { color: SEMANTIC.axis } },
+  axisTick: { lineStyle: { color: SEMANTIC.axis } },
   axisLabel: { color: SEMANTIC.muted, fontSize: 11, fontFamily: FONT },
-  splitLine: { lineStyle: { color: SEMANTIC.grid, type: 'dashed' as const } },
+  splitLine: { lineStyle: { color: SEMANTIC.grid } },
 };

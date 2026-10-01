@@ -2,6 +2,30 @@ import { useStore } from '../store';
 import type { Frame, ServerMsg, VariantsMsg } from '../types';
 import { mockServer } from './mock';
 import { LiveSocket } from './ws';
+import { useMicro } from '../micro/store';
+import { refreshStatic } from '../micro/api';
+import type { MicroFrame } from '../micro/types';
+
+let pendingMicro: MicroFrame | null = null;
+let microRaf: number | null = null;
+
+function flushMicro() {
+  microRaf = null;
+  const f = pendingMicro;
+  pendingMicro = null;
+  if (!f) return;
+  const ms = useMicro.getState();
+  if (!ms.stat || ms.stat.version !== f.version) refreshStatic().catch(() => undefined);
+  ms.applyFrame(f);
+}
+
+function queueMicro(f: MicroFrame) {
+  pendingMicro = f;
+  if (microRaf == null) {
+    microRaf = requestAnimationFrame(flushMicro);
+    if (document.hidden) window.setTimeout(() => microRaf != null && (cancelAnimationFrame(microRaf), flushMicro()), 250);
+  }
+}
 
 /* ---------- rAF-батчинг кадров: за один кадр анимации рендерим только последний frame ---------- */
 let pendingFrame: Frame | null = null;
@@ -69,6 +93,12 @@ export function handleServerMsg(m: ServerMsg): void {
       break;
     case 'events':
       if (Array.isArray(m.events) && m.events.length) st.addEvents(m.events);
+      break;
+    case 'micro':
+      queueMicro(m as unknown as MicroFrame);
+      break;
+    case 'micro_events':
+      useMicro.getState().addEvents(m.version, m.events);
       break;
     default:
       break;

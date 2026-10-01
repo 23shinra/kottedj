@@ -35,18 +35,24 @@ export const STATUS_NAME: Record<TrainStatus, string> = {
   rerouted: 'направлен по обходу',
 };
 
+/** Зеркало токенов из styles/tokens.css — для canvas (ECharts), где CSS-переменные недоступны. */
 export const SEMANTIC = {
-  ok: '#2fbf71',
-  warn: '#f5a524',
-  crit: '#f04438',
-  info: '#5b9cf5',
-  accent: '#8b9cff',
-  muted: '#8a9bb5',
-  text: '#e6edf7',
-  text2: '#b4c0d3',
-  grid: '#1f2b42',
-  surface: '#111a2b',
-  surface2: '#0e1625',
+  ok: '#3fb66b',
+  warn: '#e0a028',
+  crit: '#ec4c41',
+  critText: '#f5a19a',
+  info: '#4f9cf9',
+  accent: '#4f9cf9',
+  muted: '#8b929c',
+  dim: '#616873',
+  text: '#e3e6ea',
+  text2: '#b4bac3',
+  grid: '#23282e',
+  axis: '#323840',
+  line: '#262b32',
+  surface: '#15181c',
+  surface2: '#1b1f24',
+  baseline: '#a3a9b2',
 };
 
 export const SEVERITY_RANK: Record<Severity, number> = {
@@ -60,7 +66,7 @@ export const SEVERITY_RANK: Record<Severity, number> = {
 export const SEVERITY_COLOR: Record<Severity, string> = {
   critical: SEMANTIC.crit,
   high: SEMANTIC.warn,
-  medium: '#e3c25b',
+  medium: '#d6b84a',
   low: SEMANTIC.info,
   info: SEMANTIC.info,
 };

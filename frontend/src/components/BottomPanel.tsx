@@ -1,10 +1,11 @@
-import { useMemo, useRef, useState } from 'react';
-import { CalendarRange, Clock3, TrainTrack, Users, Wrench } from 'lucide-react';
+import { useMemo, useState } from 'react';
+import { Wrench } from 'lucide-react';
 import { useViewFrame, useViewPlan } from '../store';
 import type { ResourceState } from '../types';
 import { clock } from '../utils/time';
 import { GanttChart } from './charts/GanttChart';
 import { ApproachChart } from './charts/ApproachChart';
+import { Tabs, type TabItem } from './common';
 
 const RES_STATUS: Record<string, { name: string; cls: string }> = {
   available: { name: 'свободен', cls: 'ok' },
@@ -17,12 +18,11 @@ const RES_STATUS: Record<string, { name: string; cls: string }> = {
   failed: { name: 'неисправен', cls: 'crit' },
 };
 
-function ResourceChips({ title, items, next, icon }: { title: string; items: ResourceState[]; next: Map<string, string>; icon: JSX.Element }) {
+function ResourceChips({ title, items, next }: { title: string; items: ResourceState[]; next: Map<string, string> }) {
   const free = items.filter((r) => r.status === 'available').length;
   return (
     <div className="res-group">
       <div className="res-h">
-        {icon}
         {title}
         <span className="res-count">
           свободно <b className="num">{free}</b> из {items.length}
@@ -76,55 +76,33 @@ function ResourcesView() {
           ⚠ На горизонте плана не хватает локомотива/бригады для: {missing.map((m) => `№${m}`).join(', ')}
         </div>
       )}
-      <ResourceChips title="Локомотивы" items={frame.state.locos} next={nextLoco} icon={<TrainTrack size={14} />} />
-      <ResourceChips title="Локомотивные бригады" items={frame.state.crews} next={nextCrew} icon={<Users size={14} />} />
+      <ResourceChips title="Локомотивы" items={frame.state.locos} next={nextLoco} />
+      <ResourceChips title="Локомотивные бригады" items={frame.state.crews} next={nextCrew} />
     </div>
   );
 }
 
-const TABS = [
-  { id: 'gantt', label: 'График занятости путей', icon: <CalendarRange size={14} /> },
-  { id: 'approach', label: 'Диаграмма подхода', icon: <Clock3 size={14} /> },
-  { id: 'res', label: 'Ресурсы', icon: <Users size={14} /> },
-] as const;
-type TabId = (typeof TABS)[number]['id'];
+type TabId = 'gantt' | 'approach' | 'res';
+const TABS: TabItem<TabId>[] = [
+  { id: 'gantt', label: 'Занятость путей' },
+  { id: 'approach', label: 'Диаграмма подхода' },
+  { id: 'res', label: 'Ресурсы' },
+];
+const HINT: Record<TabId, string> = {
+  gantt: '−30 мин … +2 ч · сплошные — факт, пунктир — план ИИ',
+  approach: 'запад — выше, восток — ниже · пунктир — траектория к слоту',
+  res: 'состояние и ближайшие назначения по плану',
+};
 
 export function BottomPanel() {
   const [tab, setTab] = useState<TabId>('gantt');
-  const refs = useRef<(HTMLButtonElement | null)[]>([]);
-  const onKey = (e: React.KeyboardEvent, i: number) => {
-    if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
-    const n = (i + (e.key === 'ArrowRight' ? 1 : TABS.length - 1)) % TABS.length;
-    setTab(TABS[n].id);
-    refs.current[n]?.focus();
-  };
   return (
     <section className="panel bottom-panel">
-      <header className="panel-h tabs-h">
-        <div role="tablist" aria-label="Нижняя панель" className="tabs">
-          {TABS.map((t, i) => (
-            <button
-              key={t.id}
-              ref={(el) => (refs.current[i] = el)}
-              role="tab"
-              id={`tab-${t.id}`}
-              aria-selected={tab === t.id}
-              aria-controls={`tabpanel-${t.id}`}
-              tabIndex={tab === t.id ? 0 : -1}
-              className={`tab ${tab === t.id ? 'on' : ''}`}
-              onClick={() => setTab(t.id)}
-              onKeyDown={(e) => onKey(e, i)}
-            >
-              {t.icon}
-              {t.label}
-            </button>
-          ))}
-        </div>
-        <span className="h-sub">
-          {tab === 'gantt' ? 'окно: −30 мин … +2 ч · сплошные — факт, пунктир — план ИИ' : tab === 'approach' ? 'запад — выше, восток — ниже · пунктир — траектория к слоту' : 'состояние и ближайшие назначения по плану'}
-        </span>
+      <header className="panel-h">
+        <Tabs idPrefix="bottom" label="Графики и ресурсы" value={tab} onChange={setTab} items={TABS} />
+        <span className="h-sub">{HINT[tab]}</span>
       </header>
-      <div className="panel-b tabpanel" role="tabpanel" id={`tabpanel-${tab}`} aria-labelledby={`tab-${tab}`}>
+      <div className="bottom-b" role="tabpanel" id="bottom-panel" aria-labelledby={`bottom-tab-${tab}`}>
         {tab === 'gantt' && <GanttChart />}
         {tab === 'approach' && <ApproachChart />}
         {tab === 'res' && <ResourcesView />}

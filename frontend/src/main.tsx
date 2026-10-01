@@ -4,7 +4,12 @@ import App from './App';
 import { useStore } from './store';
 import type { Role } from './types';
 import '@fontsource-variable/inter';
-import './styles/app.css';
+import './styles/tokens.css';
+import './styles/base.css';
+import './styles/components.css';
+import './styles/layout.css';
+import './styles/widgets.css';
+import './styles/micro.css';
 
 // ?mock=1 — демо-режим без сервера (для разработки и скриншотов); &role=dispatcher — роль диспетчера
 const params = new URLSearchParams(location.search);

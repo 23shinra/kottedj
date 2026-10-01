@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Check, CircleCheck, Cpu, Sparkles, Trophy } from 'lucide-react';
+import { CircleCheck } from 'lucide-react';
 import { useStore } from '../store';
 import { api, errText } from '../api/rest';
 import type { Incident, Plan } from '../types';
@@ -39,9 +39,7 @@ function VariantCard({ v, applied, appliedLabel, best, curIndex, curKpi, onApply
       <header>
         <h3>{v.variant_name}</h3>
         {best && (
-          <span className="badge badge-ok">
-            <Trophy size={11} /> лучший индекс
-          </span>
+          <span className="badge badge-ok">лучший индекс</span>
         )}
       </header>
       <p className="variant-desc">{v.description ?? ''}</p>
@@ -82,7 +80,7 @@ function VariantCard({ v, applied, appliedLabel, best, curIndex, curKpi, onApply
         </dd>
       </dl>
       <div className="variant-solver">
-        <Cpu size={12} /> {v.solver.engine.toUpperCase()} · {v.solver.status} · <span className="num">{v.solver.time_ms} мс</span>
+        {v.solver.engine.toUpperCase()} · {v.solver.status} · <span className="num">{v.solver.time_ms} мс</span>
       </div>
       <footer>
         {applied ? (
@@ -91,7 +89,7 @@ function VariantCard({ v, applied, appliedLabel, best, curIndex, curKpi, onApply
           </span>
         ) : (
           <button className="btn btn-primary" onClick={onApply} disabled={busy}>
-            <Check size={14} /> {busy ? 'Применение…' : 'Применить'}
+            {busy ? 'Применение…' : 'Применить'}
           </button>
         )}
       </footer>
@@ -132,11 +130,7 @@ export function VariantsModal() {
     <Modal
       wide
       labelledBy="variants-h"
-      title={
-        <>
-          <Sparkles size={18} /> Варианты перепланирования
-        </>
-      }
+      title="Варианты перепланирования"
       onClose={() => {
         setOpen(false);
         setManual(null);

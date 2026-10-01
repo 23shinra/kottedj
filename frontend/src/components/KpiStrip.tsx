@@ -1,8 +1,7 @@
 import { memo, useMemo } from 'react';
-import { Activity, AlarmClock, CalendarClock, GitMerge, Hand, Layers, ListOrdered, TrainTrack } from 'lucide-react';
 import { useStore, useViewFrame, type HistPoint } from '../store';
 import type { Kpi } from '../types';
-import { Delta, Sparkline } from './common';
+import { Delta, Sparkline, Stat, StatStrip } from './common';
 import { fmtNum } from '../utils/time';
 
 type Better = 'lower' | 'higher' | 'band';
@@ -10,7 +9,6 @@ type Better = 'lower' | 'higher' | 'band';
 interface KpiDef {
   id: string;
   title: string;
-  icon: JSX.Element;
   value: (k: Kpi) => number;
   display: (k: Kpi) => string;
   unit?: string;
@@ -27,7 +25,6 @@ const DEFS: KpiDef[] = [
   {
     id: 'queue',
     title: 'Очередь на подходе',
-    icon: <ListOrdered size={14} />,
     value: (k) => k.queue_len,
     display: (k) => fmtNum(k.queue_len, 0),
     unit: 'поездов',
@@ -39,7 +36,6 @@ const DEFS: KpiDef[] = [
   {
     id: 'wait',
     title: 'Ожидание приёма',
-    icon: <AlarmClock size={14} />,
     value: (k) => k.avg_entry_wait_min,
     display: (k) => fmtNum(k.avg_entry_wait_min, 1),
     unit: 'мин',
@@ -49,7 +45,6 @@ const DEFS: KpiDef[] = [
   {
     id: 'stops',
     title: 'Остановки у сигнала',
-    icon: <Hand size={14} />,
     value: (k) => k.signal_stops_1h ?? NaN,
     display: (k) => fmtNum(k.signal_stops_1h ?? NaN, 0),
     unit: 'за 1 ч',
@@ -60,7 +55,6 @@ const DEFS: KpiDef[] = [
   {
     id: 'dev',
     title: 'Отклонение от графика',
-    icon: <CalendarClock size={14} />,
     value: (k) => k.avg_deviation_min,
     display: (k) => fmtNum(k.avg_deviation_min, 1),
     unit: 'мин',
@@ -70,7 +64,6 @@ const DEFS: KpiDef[] = [
   {
     id: 'thr',
     title: 'Пропускная',
-    icon: <Activity size={14} />,
     value: (k) => k.throughput_ratio * 100,
     display: (k) => `${k.departed_1h} / ${k.due_1h}`,
     unit: 'за 1 ч',
@@ -82,7 +75,6 @@ const DEFS: KpiDef[] = [
   {
     id: 'util',
     title: 'Загрузка путей',
-    icon: <TrainTrack size={14} />,
     value: (k) => k.utilization * 100,
     display: (k) => `${Math.round(k.utilization * 100)}%`,
     better: 'band',
@@ -93,7 +85,6 @@ const DEFS: KpiDef[] = [
   {
     id: 'conf',
     title: 'Конфликты',
-    icon: <GitMerge size={14} />,
     value: (k) => k.conflicts,
     display: (k) => fmtNum(k.conflicts, 0),
     unit: 'неразреш.',
@@ -104,7 +95,6 @@ const DEFS: KpiDef[] = [
   {
     id: 'res',
     title: 'Свободно лок. / бригад',
-    icon: <Layers size={14} />,
     value: (k) => k.locos_idle ?? NaN,
     display: (k) => `${k.locos_idle ?? '—'} / ${k.crews_idle ?? '—'}`,
     better: 'higher',
@@ -138,25 +128,24 @@ const KpiCard = memo(function KpiCard({ def, kpi, other, otherLabel, series, oth
       deltaEl = <Delta ai={v} base={ov} better={def.better} digits={def.digits ?? 1} />;
     }
   }
+  const sub = def.sub?.(kpi);
   return (
-    <div className="kpi" title={def.hint} tabIndex={0} aria-label={`${def.title}: ${def.display(kpi)} ${def.unit ?? ''}. ${otherLabel}: ${other ? def.display(other) : 'нет данных'}`}>
-      <div className="kpi-h">
-        {def.icon}
-        <span>{def.title}</span>
-      </div>
-      <div className="kpi-main">
-        <span className="kpi-v num">{def.display(kpi)}</span>
-        {def.unit && <span className="kpi-u">{def.unit}</span>}
-        <Sparkline values={series} compare={otherSeries} width={72} height={24} label={`${def.title}: тренд за 5 минут`} />
-      </div>
-      <div className="kpi-cmp">
-        <span className="kpi-other">
-          {otherLabel}: <b className="num">{other ? def.display(other) : '—'}</b>
-        </span>
-        {deltaEl}
-      </div>
-      {def.sub && <div className="kpi-sub">{def.sub(kpi)}</div>}
-    </div>
+    <Stat
+      label={def.title}
+      value={def.display(kpi)}
+      unit={def.unit}
+      title={`${def.hint}${sub ? `\n${sub}` : ''}`}
+      ariaLabel={`${def.title}: ${def.display(kpi)} ${def.unit ?? ''}. ${otherLabel}: ${other ? def.display(other) : 'нет данных'}`}
+      aside={<Sparkline values={series} compare={otherSeries} width={64} height={22} label={`${def.title}: тренд за 5 минут`} />}
+      sub={
+        <>
+          <span>
+            {otherLabel} <b className="num">{other ? def.display(other) : '—'}</b>
+          </span>
+          {deltaEl}
+        </>
+      }
+    />
   );
 });
 
@@ -181,14 +170,14 @@ export function KpiStrip() {
     }));
   }, [recent]);
 
-  if (!frame) return <div className="kpis kpis-empty" aria-busy="true" />;
+  if (!frame) return <div className="stats stats-empty" aria-busy="true" />;
   const ai = frame.compare?.ai?.kpi ?? frame.state.kpi;
   const base = frame.compare?.baseline?.kpi ?? null;
   const primary = baselinePrimary && base ? base : ai;
   const other = baselinePrimary ? ai : base;
 
   return (
-    <div className={`kpis ${baselinePrimary ? 'kpis-baseline' : ''}`} role="region" aria-label="Ключевые показатели">
+    <StatStrip label={baselinePrimary ? 'Ключевые показатели двойника без ИИ' : 'Ключевые показатели'}>
       {DEFS.map((d, i) => (
         <KpiCard
           key={d.id}
@@ -200,6 +189,6 @@ export function KpiStrip() {
           otherSeries={baselinePrimary ? seriesFor[i].ai : seriesFor[i].base}
         />
       ))}
-    </div>
+    </StatStrip>
   );
 }

@@ -1,22 +1,23 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useIsStale, useStore } from './store';
 import { startLive } from './api/live';
 import { api } from './api/rest';
 import { Login } from './components/Login';
 import { TopBar } from './components/TopBar';
+import { MacroToolbar } from './components/MacroToolbar';
 import { KpiStrip } from './components/KpiStrip';
 import { StationSchema } from './components/StationSchema';
 import { BottomPanel } from './components/BottomPanel';
 import { RecommendationsPanel } from './components/RecommendationsPanel';
-import { QueuePanel } from './components/QueuePanel';
-import { IndexFactorsPanel } from './components/IndexFactorsPanel';
-import { EventLog } from './components/EventLog';
+import { SidePanel } from './components/SidePanel';
 import { IncidentDrawer } from './components/IncidentDrawer';
 import { VariantsModal } from './components/VariantsModal';
 import { SettingsModal } from './components/SettingsModal';
 import { CompareView, timelineToHist } from './components/CompareView';
 import { HistoryBar } from './components/HistoryBar';
 import { BaselineNote, ConnectionBanner, HistoryBanner, LatencyProbe, Toasts } from './components/Banners';
+import { MicroApp } from './micro/MicroApp';
+import { useMicro } from './micro/store';
 
 function Dashboard() {
   const mode = useStore((s) => s.mode);
@@ -24,6 +25,8 @@ function Dashboard() {
   const history = useStore((s) => !!s.historyView);
   const online = useStore((s) => s.conn.status === 'online');
   const prefilled = useRef(false);
+  const section = useMicro((s) => s.section);
+  const [sideOpen, setSideOpen] = useState(false);
 
   useEffect(() => startLive(), []);
 
@@ -46,15 +49,37 @@ function Dashboard() {
     return () => window.removeEventListener('keydown', k);
   }, []);
 
+  useEffect(() => setSideOpen(false), [section]);
+
+  if (section === 'micro') {
+    return (
+      <div className={`app app-micro ${sideOpen ? 'side-open' : ''}`}>
+        <a href="#main" className="skip">
+          Перейти к содержимому
+        </a>
+        <TopBar />
+        <div className="banners">
+          <ConnectionBanner />
+        </div>
+        <MicroApp sideOpen={sideOpen} onToggleSide={() => setSideOpen((o) => !o)} />
+        <div className="side-backdrop" onClick={() => setSideOpen(false)} aria-hidden="true" />
+        <Toasts />
+      </div>
+    );
+  }
+
   return (
-    <div className={`app ${stale ? 'is-stale' : ''} ${history ? 'is-history' : ''} mode-${mode}`}>
-      <a href="#main" className="skip">Перейти к содержимому</a>
+    <div className={`app ${stale ? 'is-stale' : ''} ${history ? 'is-history' : ''} mode-${mode} ${sideOpen ? 'side-open' : ''}`}>
+      <a href="#main" className="skip">
+        Перейти к содержимому
+      </a>
       <TopBar />
       <div className="banners">
         <ConnectionBanner />
         <HistoryBanner />
         <BaselineNote />
       </div>
+      <MacroToolbar sideOpen={sideOpen} onToggleSide={() => setSideOpen((o) => !o)} />
       <KpiStrip />
       <main id="main" className="main">
         <div className="center live">
@@ -69,11 +94,10 @@ function Dashboard() {
         </div>
         <aside className="right live" aria-label="Рекомендации, очередь, индекс и журнал">
           <RecommendationsPanel />
-          <QueuePanel />
-          <IndexFactorsPanel />
-          <EventLog />
+          <SidePanel />
         </aside>
       </main>
+      <div className="side-backdrop" onClick={() => setSideOpen(false)} aria-hidden="true" />
       <HistoryBar />
       <IncidentDrawer />
       <VariantsModal />

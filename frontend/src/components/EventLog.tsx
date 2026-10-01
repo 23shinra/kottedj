@@ -3,7 +3,6 @@ import { ArrowDownToLine, ArrowUpFromLine, Hand, MousePointerClick, ScrollText, 
 import { useStore } from '../store';
 import type { SimEvent } from '../types';
 import { clockSec } from '../utils/time';
-import { Panel } from './common';
 
 const FILTERS = [
   { id: 'all', label: 'Все' },
@@ -58,7 +57,8 @@ const EvRow = memo(function EvRow({ e }: { e: SimEvent }) {
   );
 });
 
-export function EventLog() {
+/** Журнал событий (содержимое вкладки боковой панели). */
+export function EventLogView() {
   const events = useStore((s) => s.events);
   const [f, setF] = useState<F>('all');
   const [hideTelemetry, setHideTelemetry] = useState(true);
@@ -67,19 +67,15 @@ export function EventLog() {
     [events, f, hideTelemetry],
   );
   return (
-    <Panel
-      id="events"
-      title="Журнал событий"
-      icon={<ScrollText size={15} />}
-      extra={<span className="muted small num">{events.length}</span>}
-      className="events-panel"
-    >
-      <div className="ev-filters" role="group" aria-label="Фильтр событий">
-        {FILTERS.map((x) => (
-          <button key={x.id} className={`fchip ${f === x.id ? 'on' : ''}`} aria-pressed={f === x.id} onClick={() => setF(x.id)}>
-            {x.label}
-          </button>
-        ))}
+    <>
+      <div className="ev-filters">
+        <div className="seg" role="group" aria-label="Фильтр событий">
+          {FILTERS.map((x) => (
+            <button key={x.id} className={`seg-btn ${f === x.id ? 'on' : ''}`} aria-pressed={f === x.id} onClick={() => setF(x.id)}>
+              {x.label}
+            </button>
+          ))}
+        </div>
         <label className="fcheck">
           <input type="checkbox" checked={!hideTelemetry} onChange={(e) => setHideTelemetry(!e.target.checked)} /> телеметрия
         </label>
@@ -90,6 +86,6 @@ export function EventLog() {
         ))}
         {!list.length && <li className="muted small">Событий нет</li>}
       </ul>
-    </Panel>
+    </>
   );
 }

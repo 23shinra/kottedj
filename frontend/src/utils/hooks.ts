@@ -22,6 +22,23 @@ export function useDebounced<A extends unknown[]>(fn: (...a: A) => void, ms: num
   };
 }
 
+/** Закрытие всплывающего элемента по клику снаружи и по Escape. */
+export function useDismiss(open: boolean, ref: React.RefObject<HTMLElement>, close: () => void): void {
+  const f = useRef(close);
+  f.current = close;
+  useEffect(() => {
+    if (!open) return;
+    const onDown = (e: MouseEvent) => !ref.current?.contains(e.target as Node) && f.current();
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && f.current();
+    document.addEventListener('mousedown', onDown);
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('mousedown', onDown);
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [open, ref]);
+}
+
 /** Размер элемента (ResizeObserver). */
 export function useSize<T extends HTMLElement>(): [React.RefObject<T>, { w: number; h: number }] {
   const ref = useRef<T>(null);

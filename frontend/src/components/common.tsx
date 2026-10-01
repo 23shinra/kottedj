@@ -1,7 +1,8 @@
-import { memo, useEffect, useRef, type ReactNode } from 'react';
+import { memo, useEffect, useRef, useState, type ReactNode } from 'react';
 import { ArrowDown, ArrowUp, Container, Info, Minus, OctagonAlert, Package, TriangleAlert, Users, X } from 'lucide-react';
 import type { Severity, TrainCat } from '../types';
 import { CAT_COLOR, CAT_NAME } from '../utils/theme';
+import { useDismiss } from '../utils/hooks';
 
 export const CatIcon = memo(function CatIcon({ cat, size = 14, colored = true }: { cat: TrainCat; size?: number; colored?: boolean }) {
   const Icon = cat === 'pass' ? Users : cat === 'freight_transit' ? Container : Package;
@@ -66,9 +67,21 @@ export function Delta({ ai, base, better, unit = '', digits = 1, pct = false }: 
   );
 }
 
-export function Panel({ title, icon, extra, children, className = '', id }: {
+export function PanelHeader({ id, title, sub, extra }: { id?: string; title: ReactNode; sub?: ReactNode; extra?: ReactNode }) {
+  return (
+    <header className="panel-h">
+      <h2 id={id ? `${id}-h` : undefined}>
+        {title}
+        {sub && <span className="h-sub">{sub}</span>}
+      </h2>
+      {extra && <div className="panel-extra">{extra}</div>}
+    </header>
+  );
+}
+
+export function Panel({ title, sub, extra, children, className = '', id }: {
   title: ReactNode;
-  icon?: ReactNode;
+  sub?: ReactNode;
   extra?: ReactNode;
   children: ReactNode;
   className?: string;
@@ -76,15 +89,124 @@ export function Panel({ title, icon, extra, children, className = '', id }: {
 }) {
   return (
     <section className={`panel ${className}`} aria-labelledby={id ? `${id}-h` : undefined}>
-      <header className="panel-h">
-        <h2 id={id ? `${id}-h` : undefined}>
-          {icon}
-          {title}
-        </h2>
-        {extra && <div className="panel-extra">{extra}</div>}
-      </header>
+      <PanelHeader id={id} title={title} sub={sub} extra={extra} />
       <div className="panel-b">{children}</div>
     </section>
+  );
+}
+
+export function Toolbar({ label, children, className = '' }: { label: string; children: ReactNode; className?: string }) {
+  return (
+    <div className={`toolbar ${className}`} role="toolbar" aria-label={label}>
+      {children}
+    </div>
+  );
+}
+
+export function ToolbarSep() {
+  return <span className="tb-sep" aria-hidden="true" />;
+}
+
+export function StatStrip({ label, children, className = '' }: { label: string; children: ReactNode; className?: string }) {
+  return (
+    <div className={`stats ${className}`} role="region" aria-label={label}>
+      {children}
+    </div>
+  );
+}
+
+export type Tone = 'ok' | 'warn' | 'crit';
+
+export function Stat({ label, value, unit, sub, tone, title, aside, ariaLabel }: {
+  label: ReactNode;
+  value: ReactNode;
+  unit?: ReactNode;
+  sub?: ReactNode;
+  tone?: Tone;
+  title?: string;
+  aside?: ReactNode;
+  ariaLabel?: string;
+}) {
+  return (
+    <div className={`stat ${tone ? `stat-${tone}` : ''}`} title={title} tabIndex={title || ariaLabel ? 0 : undefined} aria-label={ariaLabel}>
+      <span className="stat-l">{label}</span>
+      <span className="stat-main">
+        <b className="stat-v num">{value}</b>
+        {unit && <span className="stat-u">{unit}</span>}
+        {aside}
+      </span>
+      {sub != null && sub !== '' && <span className="stat-sub">{sub}</span>}
+    </div>
+  );
+}
+
+export interface TabItem<T extends string> {
+  id: T;
+  label: string;
+  icon?: ReactNode;
+  count?: number;
+}
+
+export function Tabs<T extends string>({ items, value, onChange, label, idPrefix }: {
+  items: TabItem<T>[];
+  value: T;
+  onChange: (id: T) => void;
+  label: string;
+  idPrefix: string;
+}) {
+  const refs = useRef<(HTMLButtonElement | null)[]>([]);
+  const onKey = (e: React.KeyboardEvent, i: number) => {
+    if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+    e.preventDefault();
+    const n = (i + (e.key === 'ArrowRight' ? 1 : items.length - 1)) % items.length;
+    onChange(items[n].id);
+    refs.current[n]?.focus();
+  };
+  return (
+    <div role="tablist" aria-label={label} className="tabs">
+      {items.map((t, i) => (
+        <button
+          key={t.id}
+          ref={(el) => (refs.current[i] = el)}
+          role="tab"
+          id={`${idPrefix}-tab-${t.id}`}
+          aria-selected={value === t.id}
+          aria-controls={`${idPrefix}-panel`}
+          tabIndex={value === t.id ? 0 : -1}
+          className={`tab ${value === t.id ? 'on' : ''}`}
+          onClick={() => onChange(t.id)}
+          onKeyDown={(e) => onKey(e, i)}
+        >
+          {t.icon}
+          <span>{t.label}</span>
+          {!!t.count && <span className="cnt num">{t.count}</span>}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+export function Popover({ button, buttonLabel, children, className = '', up = false }: {
+  button: ReactNode;
+  buttonLabel: string;
+  children: ReactNode;
+  className?: string;
+  up?: boolean;
+}) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  useDismiss(open, ref, () => setOpen(false));
+  return (
+    <div className="popwrap" ref={ref}>
+      <button className={`btn btn-xs btn-ghost ${open ? 'on' : ''}`} aria-expanded={open} aria-label={buttonLabel} onClick={() => setOpen((o) => !o)}>
+        {button}
+      </button>
+      {open && (
+        <div className={`pop ${up ? 'pop-up' : ''} ${className}`} role="dialog" aria-label={buttonLabel}>
+          {children}
+        </div>
+      )}
+    </div>
   );
 }
 

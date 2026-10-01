@@ -1,38 +1,28 @@
 import { useState } from 'react';
-import { ChevronDown, ChevronRight, Sigma } from 'lucide-react';
+import { ChevronDown, ChevronRight } from 'lucide-react';
 import { useStore, useViewFrame } from '../store';
 import { fmtNum } from '../utils/time';
-import { Panel } from './common';
 
-export function IndexFactorsPanel() {
+/** Вклад факторов в индекс (содержимое вкладки боковой панели). */
+export function IndexFactorsView() {
   const frame = useViewFrame();
   const mode = useStore((s) => s.mode);
   const cfg = useStore((s) => s.indexConfig);
   const [open, setOpen] = useState(false);
   const index = mode === 'baseline' ? frame?.compare?.baseline?.index : frame?.index;
-  if (!index) {
-    return (
-      <Panel id="factors" title="Индекс: вклад факторов" icon={<Sigma size={15} />}>
-        <p className="muted small">Нет данных</p>
-      </Panel>
-    );
-  }
+  if (!index) return <p className="muted small">Нет данных</p>;
   const top = (index.top?.length ? index.top : [...index.factors].sort((a, b) => b.loss - a.loss)).slice(0, 5);
   const maxW = Math.max(...index.factors.map((f) => f.weight * 100), 1);
   const cats = [...(cfg?.categories ?? [])].sort((a, b) => b.min - a.min);
   return (
-    <Panel
-      id="factors"
-      title="Индекс: вклад факторов"
-      icon={<Sigma size={15} />}
-      extra={
-        <span className="badge" style={{ color: index.category.color, borderColor: index.category.color }}>
-          {mode === 'baseline' ? 'FCFS · ' : ''}
+    <>
+      <p className="factor-reason">
+        <b style={{ color: index.category.color }}>
+          {mode === 'baseline' ? 'FCFS: ' : ''}
           {fmtNum(index.value, 1)} · {index.grade}
-        </span>
-      }
-    >
-      <p className="factor-reason">{index.category.reason}</p>
+        </b>{' '}
+        {index.category.reason}
+      </p>
       <div className="factor-cap">Потеря баллов (из максимума веса фактора)</div>
       <ul className="factors">
         {top.map((f) => {
@@ -99,6 +89,6 @@ export function IndexFactorsPanel() {
           </div>
         </div>
       )}
-    </Panel>
+    </>
   );
 }

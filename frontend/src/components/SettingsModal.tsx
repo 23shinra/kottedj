@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Gauge, Lock, RotateCcw, Save, Settings } from 'lucide-react';
+import { Lock } from 'lucide-react';
 import { useIsAdmin, useStore } from '../store';
 import { api, errText } from '../api/rest';
 import type { IndexConfig, PlannerConfig } from '../types';
@@ -92,11 +92,7 @@ export function SettingsModal() {
   if (!admin) {
     return (
       <Modal
-        title={
-          <>
-            <Gauge size={18} /> Формула индекса состояния
-          </>
-        }
+        title="Формула индекса состояния"
         onClose={close}
         labelledBy="settings-h"
       >
@@ -153,11 +149,7 @@ export function SettingsModal() {
     <Modal
       wide
       labelledBy="settings-h"
-      title={
-        <>
-          <Settings size={18} /> Настройки индекса и оптимизатора
-        </>
-      }
+      title="Настройки индекса и оптимизатора"
       onClose={close}
       footer={
         <>
@@ -169,10 +161,10 @@ export function SettingsModal() {
             }}
             disabled={!idxDirty && !plDirty}
           >
-            <RotateCcw size={14} /> Сбросить
+            Сбросить
           </button>
           <button className="btn btn-primary" onClick={save} disabled={saving || (!idxDirty && !plDirty) || thrInvalid}>
-            <Save size={14} /> {saving ? 'Сохранение…' : 'Сохранить'}
+            {saving ? 'Сохранение…' : 'Сохранить'}
           </button>
         </>
       }

@@ -1,5 +1,4 @@
 import { memo, useMemo } from 'react';
-import { Hand, Pause, TrainFront, Gauge as GaugeIc } from 'lucide-react';
 import { useStore, useViewFrame, useViewPlan } from '../store';
 import type { LadderState, Plan, Side, Station, TrackState, Train } from '../types';
 import { useSize } from '../utils/hooks';
@@ -7,7 +6,7 @@ import { CAT_COLOR, CAT_NAME, catColor } from '../utils/theme';
 import { clock } from '../utils/time';
 import { serviceProgress } from '../utils/derive';
 import { DetailsCard } from './DetailsCard';
-import { CatIcon } from './common';
+import { CatIcon, Popover } from './common';
 
 /* ======================= Геометрия ======================= */
 interface TrackGeo {
@@ -524,20 +523,22 @@ export function StationSchema() {
   return (
     <section className="panel schema-panel" aria-labelledby="schema-h">
       <header className="panel-h">
-        <h2 id="schema-h">
-          <TrainFront size={15} /> Схема станции
-          <span className="h-sub">живое состояние мира ИИ</span>
-        </h2>
-        <div className="schema-counters" aria-live="polite">
-          <span className={`cnt ${counts.sig ? 'cnt-crit' : 'cnt-ok'}`} title="Поезда, стоящие у входного сигнала">
-            <Hand size={13} /> у сигнала: <b className="num">{counts.sig}</b>
-          </span>
-          <span className="cnt cnt-info" title="Поезда, идущие с рекомендованной пониженной скоростью к своему слоту">
-            <GaugeIc size={13} /> регулируются скоростью: <b className="num">{counts.reg}</b>
-          </span>
-          <span className="cnt cnt-warn" title="Поезда, удержанные на предыдущей станции до своего слота">
-            <Pause size={13} /> удержаны: <b className="num">{counts.held}</b>
-          </span>
+        <h2 id="schema-h">Схема станции</h2>
+        <div className="panel-extra">
+          <div className="schema-counters" aria-live="polite">
+            <span className={`cnt ${counts.sig ? 'cnt-crit' : ''}`} title="Поезда, стоящие у входного сигнала">
+              у сигнала <b className="num">{counts.sig}</b>
+            </span>
+            <span className={`cnt ${counts.reg ? 'cnt-info' : ''}`} title="Поезда, идущие с рекомендованной пониженной скоростью к своему слоту">
+              регулируются <b className="num">{counts.reg}</b>
+            </span>
+            <span className={`cnt ${counts.held ? 'cnt-warn' : ''}`} title="Поезда, удержанные на предыдущей станции до своего слота">
+              удержаны <b className="num">{counts.held}</b>
+            </span>
+          </div>
+          <Popover button="Легенда" buttonLabel="Условные обозначения схемы станции" className="legend-pop">
+            <Legend />
+          </Popover>
         </div>
       </header>
       <div className="schema-body" ref={ref}>
@@ -545,8 +546,8 @@ export function StationSchema() {
           <svg width={L.W} height={L.H} viewBox={`0 0 ${L.W} ${L.H}`} className="schema-svg" role="group" aria-label="Схема путевого развития станции">
             <defs>
               <pattern id="hatch-red" patternUnits="userSpaceOnUse" width="7" height="7" patternTransform="rotate(45)">
-                <rect width="7" height="7" fill="rgba(240,68,56,0.12)" />
-                <line x1="0" y1="0" x2="0" y2="7" stroke="rgba(240,68,56,0.65)" strokeWidth="2.4" />
+                <rect width="7" height="7" className="hatch-bg" />
+                <line x1="0" y1="0" x2="0" y2="7" className="hatch-ln" strokeWidth="2.4" />
               </pattern>
             </defs>
             <StaticLayer L={L} station={station} />
@@ -579,7 +580,6 @@ export function StationSchema() {
         )}
         {selection && <DetailsCard />}
       </div>
-      <Legend />
     </section>
   );
 }
@@ -597,7 +597,8 @@ function nextPlanned(plan: Plan | null, now: number): Map<string, string> {
 
 const Legend = memo(function Legend() {
   return (
-    <div className="legend" aria-label="Легенда схемы">
+    <div className="legend">
+      <div className="legend-h">Категории поездов</div>
       {(Object.keys(CAT_COLOR) as (keyof typeof CAT_COLOR)[]).map((c) => (
         <span key={c} className="lg">
           <CatIcon cat={c} size={12} />
@@ -605,7 +606,7 @@ const Legend = memo(function Legend() {
           {CAT_NAME[c]}
         </span>
       ))}
-      <span className="lg-sep" />
+      <div className="legend-h">Пути</div>
       <span className="lg">
         <i className="lg-track free" /> свободен
       </span>
@@ -618,7 +619,7 @@ const Legend = memo(function Legend() {
       <span className="lg">
         <i className="lg-ladder" /> занятая стрелочная улица
       </span>
-      <span className="lg-sep" />
+      <div className="legend-h">Поезда на подходе</div>
       <span className="lg lg-crit">■ стоит у сигнала</span>
       <span className="lg lg-info">▼ 35 км/ч — регулирование скорости</span>
       <span className="lg lg-warn">❚❚ удержан на пред. станции</span>

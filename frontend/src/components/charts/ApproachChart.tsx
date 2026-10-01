@@ -105,7 +105,7 @@ export function ApproachChart() {
           type: 'scatter',
           symbol: c === 'pass' ? 'circle' : c === 'freight_transit' ? 'rect' : 'diamond',
           symbolSize: 11,
-          itemStyle: { color: CAT_COLOR[c], borderColor: '#0b1220', borderWidth: 2 },
+          itemStyle: { color: CAT_COLOR[c], borderColor: SEMANTIC.surface, borderWidth: 2 },
           z: 3,
           label: { show: true, position: 'right', formatter: (p: any) => p.data.id, color: SEMANTIC.text2, fontSize: 10, fontFamily: FONT },
           data: pending
@@ -114,7 +114,7 @@ export function ApproachChart() {
               const a = plan?.assignments[t.id];
               const info =
                 t.status === 'at_signal'
-                  ? '<span style="color:#f04438">■ стоит у сигнала</span>'
+                  ? `<span style="color:${SEMANTIC.critText}">■ стоит у сигнала</span>`
                   : t.status === 'held'
                     ? 'удержан на предыдущей станции'
                     : t.regulated && t.advisory_kmh

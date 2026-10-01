@@ -1,4 +1,5 @@
 // Типы строго по реальным сообщениям из docs/samples/*.json и docs/api-contract.md
+import type { MEvent, MicroFrame } from './micro/types';
 
 export type Side = 'W' | 'E';
 export type TrainCat = 'pass' | 'freight_transit' | 'freight_local';
@@ -365,7 +366,15 @@ export interface EventsMsg {
 export interface PingMsg {
   type: 'ping';
 }
-export type ServerMsg = HelloMsg | Frame | PlanMsg | VariantsMsg | EventsMsg | PingMsg;
+export interface MicroMsg extends Omit<MicroFrame, 'type'> {
+  type: 'micro';
+}
+export interface MicroEventsMsg {
+  type: 'micro_events';
+  version?: number;
+  events: MEvent[];
+}
+export type ServerMsg = HelloMsg | Frame | PlanMsg | VariantsMsg | EventsMsg | PingMsg | MicroMsg | MicroEventsMsg;
 
 /* ---------------- REST ---------------- */
 export type Role = 'dispatcher' | 'admin';

@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useMemo } from 'react';
-import { Bot, Scale, User } from 'lucide-react';
 import { useStore, useViewFrame, type HistPoint } from '../store';
 import type { Kpi, TimelinePoint } from '../types';
 import { api } from '../api/rest';
@@ -12,7 +11,7 @@ import { Delta } from './common';
 import { IndexGauge } from './TopBar';
 
 const AI_COLOR = SEMANTIC.accent;
-const BASE_COLOR = '#a3adbd';
+const BASE_COLOR = SEMANTIC.baseline;
 
 export function timelineToHist(points: TimelinePoint[]): HistPoint[] {
   return points.map((p) => ({
@@ -62,7 +61,7 @@ function lineOption(hist: HistPoint[], pick: (h: HistPoint) => [number, number],
     tooltip: {
       ...tooltipBase,
       trigger: 'axis',
-      axisPointer: { type: 'line', lineStyle: { color: '#3a4a6a' } },
+      axisPointer: { type: 'line', lineStyle: { color: SEMANTIC.axis } },
       formatter: (ps: any[]) => {
         if (!ps.length) return '';
         const ts = ps[0].value[0];
@@ -75,7 +74,7 @@ function lineOption(hist: HistPoint[], pick: (h: HistPoint) => [number, number],
     xAxis: { type: 'time', ...axisCommon, axisLabel: { ...axisCommon.axisLabel, formatter: (v: number) => wallClock(v).slice(0, 5) }, splitLine: { show: false } },
     yAxis: { type: 'value', name: yName, min: yMin, max: yMax, nameTextStyle: { color: SEMANTIC.muted, fontSize: 10 }, ...axisCommon },
     series: [
-      { id: 'ai', name: 'С ИИ', type: 'line', showSymbol: false, data: ai, lineStyle: { width: 2, color: AI_COLOR }, itemStyle: { color: AI_COLOR }, endLabel: endLabel('ИИ', AI_COLOR), areaStyle: { color: 'rgba(139,156,255,0.08)' } },
+      { id: 'ai', name: 'С ИИ', type: 'line', showSymbol: false, data: ai, lineStyle: { width: 2, color: AI_COLOR }, itemStyle: { color: AI_COLOR }, endLabel: endLabel('ИИ', AI_COLOR) },
       { id: 'base', name: 'Без ИИ (FCFS)', type: 'line', showSymbol: false, data: base, lineStyle: { width: 2, color: BASE_COLOR, type: 'dashed' }, itemStyle: { color: BASE_COLOR }, endLabel: endLabel('FCFS', BASE_COLOR) },
     ],
   };
@@ -108,9 +107,9 @@ export function CompareView() {
     <section className="panel compare" aria-labelledby="cmp-h">
       <header className="panel-h">
         <h2 id="cmp-h">
-          <Scale size={15} /> Сравнение двух цифровых двойников на одном входном потоке
+          Сравнение: С ИИ и FCFS
+          <span className="h-sub">один входной поток, одинаковые инциденты, разный способ управления</span>
         </h2>
-        <span className="h-sub">одинаковый график и инциденты · разный способ управления</span>
       </header>
       <div className="compare-body">
         <div className="headline" role="status">
@@ -135,7 +134,7 @@ export function CompareView() {
         <div className="vs">
           <div className="vs-col vs-base">
             <div className="vs-h">
-              <User size={16} /> Без ИИ (FCFS)
+              Без ИИ (FCFS)
               <span className="muted small">реактивный диспетчер «первым пришёл — первым принят»</span>
             </div>
             <IndexGauge index={frame.compare.baseline.index} label="Индекс · FCFS" />
@@ -149,7 +148,7 @@ export function CompareView() {
           </div>
           <div className="vs-col vs-ai">
             <div className="vs-h">
-              <Bot size={16} /> С ИИ
+              С ИИ
               <span className="muted small">CP-SAT: слоты, пути, ресурсы, виртуальная очередь</span>
             </div>
             <IndexGauge index={frame.compare.ai.index} label="Индекс · ИИ" />
