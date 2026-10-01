@@ -1,0 +1,148 @@
+# Справочник подвижного состава: справочные модели. Конкретные экземпляры (номер, пробег, износ,
+# загрузка, ремонты) генерируются по seed сценария — см. Fleet в shared/dstation/micro/catalog.py.
+#
+# Все числа взяты из источников в поле sources. Если источник вторичный (справочник, энциклопедия),
+# это указано в source_level. Расчёт допустимой массы состава — демонстрационный (см. docs/model.md).
+
+locomotives:
+  TE33A:
+    name: "ТЭ33А"
+    purpose: "Магистральный грузовой (используется и в пассажирском движении)"
+    traction: diesel
+    gauge: 1520
+    power_kw: 3356            # мощность по дизелю
+    mass_t: 138               # служебная масса ±2%
+    vmax_kmh: 120             # конструкционная скорость
+    f_start_kn: 534           # сила тяги при трогании
+    f_cont_kn: 427            # касательная сила тяги длительного режима
+    v_cont_kmh: 24            # скорость длительного режима
+    length_m: 21.894          # по осям автосцепок
+    axles: 6
+    axle_formula: "3о-3о"
+    sources:
+      - {title: "АО «Локомотив құрастыру зауыты» — О продукции (ТЭ33АС)", url: "https://aolkz.kz/about-product", level: manufacturer}
+      - {title: "КТЖ — «Evolution» совершает революцию (таблица характеристик ТЭ33А)", url: "https://ktzh-gp.kz/ru/media/news/new_old/2901/", level: operator}
+      - {title: "Локомотивный парк Республики Казахстан (КиберЛенинка, табл. 2)", url: "https://cyberleninka.ru/article/n/lokomotivnyy-park-respubliki-kazahstan/pdf", level: secondary}
+    notes: "По данным КТЖ, ТЭ33А эксплуатируются на участках Алматы — Актогай и Актогай — Достык."
+
+  KZ8A:
+    name: "KZ8A"
+    purpose: "Магистральный грузовой электровоз, двухсекционный"
+    traction: electric_ac25
+    gauge: 1520
+    power_kw: 8800            # продолжительная мощность на валах
+    mass_t: 200               # 2 × 100 т
+    vmax_kmh: 120
+    f_start_kn: 833
+    f_cont_kn: 633
+    v_cont_kmh: 50
+    length_m: 35.0            # 2 × 17,5 м
+    axles: 8
+    axle_formula: "2(2о-2о)"
+    sources:
+      - {title: "Alstom — Alstom presents the first freight locomotive KZ8A to the Kazakh Railways", url: "https://www.alstom.com/press-releases-news/2012/10/kz8a", level: manufacturer}
+      - {title: "Асанов и др. Анализ результатов… (Вестник НАН РК, 2015, табл. 3 — технический паспорт KZ8A/KZ4AT)", url: "https://vestnik.nauka.kz/storage/docs/2015/12/10-%D0%90%D1%81%D0%BF%D0%B0%D0%BD%D0%BE%D0%B2-%D0%90%D0%BD%D0%B0%D0%BB%D0%B8%D0%B7-%D1%80%D0%B5%D0%B7%D1%83%D0%BB%D1%8C%D1%82..pdf", level: secondary}
+    notes: "Требует контактной сети 25 кВ 50 Гц. В демо станция неэлектрифицирована — пример отказа в приёме по роду тяги."
+
+  KZ4AT:
+    name: "KZ4AT"
+    purpose: "Магистральный пассажирский электровоз, односекционный"
+    traction: electric_ac25
+    gauge: 1520
+    power_kw: 4800
+    mass_t: 86
+    vmax_kmh: 200
+    f_start_kn: 264
+    f_cont_kn: 205
+    v_cont_kmh: 84
+    length_m: 19.0
+    axles: 4
+    axle_formula: "2о-2о"
+    sources:
+      - {title: "Alstom — KZ4AT passenger locomotive begins commercial operation in Kazakhstan", url: "https://www.alstom.com/press-releases-news/2015/4/alstom-and-tmhs-kz4at-passenger-locomotive-begins-commercial-operation-in-kazakhstan", level: manufacturer}
+      - {title: "Асанов и др. (Вестник НАН РК, 2015, табл. 3)", url: "https://vestnik.nauka.kz/storage/docs/2015/12/10-%D0%90%D1%81%D0%BF%D0%B0%D0%BD%D0%BE%D0%B2-%D0%90%D0%BD%D0%B0%D0%BB%D0%B8%D0%B7-%D1%80%D0%B5%D0%B7%D1%83%D0%BB%D1%8C%D1%82..pdf", level: secondary}
+    notes: "Требует контактной сети 25 кВ 50 Гц."
+
+  HXN5:
+    name: "HXN5 (GE ES59ACi)"
+    purpose: "Магистральный грузовой тепловоз сети Китайских железных дорог (колея 1435 мм)"
+    traction: diesel
+    gauge: 1435
+    power_kw: 4660            # максимальная эксплуатационная мощность дизеля
+    mass_t: 150
+    vmax_kmh: 120
+    f_start_kn: 620
+    f_cont_kn: 565
+    v_cont_kmh: 25            # производитель указывает 25 км/ч (энциклопедия — 22,3 км/ч)
+    length_m: 22.295
+    axles: 6
+    axle_formula: "Co-Co"
+    sources:
+      - {title: "CRRC Qishuyan — HXN5 Mainline AC Transmission Diesel Locomotive", url: "https://www.crrcgc.cc/qsyen/2013-12/29/article_50FA862FB5A74C84803E055CA722C767.html", level: manufacturer}
+      - {title: "CRRC Qishuyan — HXN5 High-Power AC Transmission Diesel Locomotive", url: "https://www.crrcgc.cc/qsyen/2016-05/18/article_1D49B059C91B490F9791187044570E07.html", level: manufacturer}
+    notes: "Использование HXN5 именно на линии к Достыку не подтверждено — модель выбрана как типовой тепловоз колеи 1435 мм (допущение)."
+
+wagons:
+  "12-132":
+    name: "Полувагон 12-132"
+    type: gondola
+    gauge: 1520
+    length_m: 13.92           # по осям сцепления автосцепок
+    tare_t: 24.0
+    capacity_t: 69.5          # «не более 69,5 т» (в ряде источников 70 т)
+    vmax_kmh: 120
+    axles: 4
+    cargo: ["насыпные и навалочные грузы, не требующие защиты от осадков"]
+    sources:
+      - {title: "Справочник моделей вагонов (vagon.by) — 12-132, изготовитель НПК «Уралвагонзавод»", url: "https://vagon.by/model/12-132/677", level: secondary}
+      - {title: "ПЖДТ — Полувагон 12-132, технические характеристики", url: "https://pzdt.ru/catalog/wagons/model_12-132/", level: secondary}
+  "15-150-04":
+    name: "Цистерна 15-150-04 (светлые нефтепродукты)"
+    type: tank
+    gauge: 1520
+    length_m: 12.02
+    tare_t: 27.5
+    capacity_t: 66.0
+    vmax_kmh: 120
+    axles: 4
+    cargo: ["светлые нефтепродукты"]
+    dangerous_cargo: true
+    sources:
+      - {title: "НефтьГазИнформ — Вагон-цистерна 15-150-04 (Уралвагонзавод)", url: "https://oilgasinform.ru/nauchnoproizvodstvennaya_korporatsiya_uralvagonzavod_imeni_fe_dzerzhinskogo_ao/catalog/vagontsisterny_dlya_perevozki_nefteproduktov/1595/", level: secondary}
+      - {title: "ПЖДТ — Вагон-цистерна 15-150-04", url: "https://pzdt.ru/catalog/wagons/model_15-150-04/", level: secondary}
+  "61-4440":
+    name: "Пассажирский купейный 61-4440"
+    type: passenger
+    gauge: 1520
+    length_m: 25.5
+    tare_t: 60.5              # «не более 60,5 т»
+    seats: 36
+    vmax_kmh: 160
+    axles: 4
+    cargo: ["пассажиры"]
+    sources:
+      - {title: "Трансмашхолдинг — Купейный вагон 61-4440", url: "https://tmholding.ru/products/odnoetazhnye/kupeynyy-vagon-61-4440/", level: manufacturer}
+      - {title: "Таможня.Ру — Вагон пассажирский купейный 61-4440 (масса тары, места)", url: "http://www.tamognia.ru/transport/waggon/index.php?ELEMENT_ID=1164476&SECTION_ID=17844", level: secondary}
+    notes: "Длина 25 500 мм по осям автосцепок; масса пассажира с багажом в расчёте — 0,1 т (условно)."
+  "C70":
+    name: "Полувагон C70 (колея 1435)"
+    type: gondola
+    gauge: 1435
+    length_m: 13.976
+    tare_t: 23.8              # «не более 23,8 т»
+    capacity_t: 70.0
+    vmax_kmh: 120
+    axles: 4
+    cargo: ["уголь, руда, строительные материалы, металл, лес"]
+    sources:
+      - {title: "CRRC — C70 open top wagon", url: "https://www.crrcgc.cc/sjzen/2014-01/02/article_DB650B0AADC94E0F955B83DF2798E898.html", level: manufacturer}
+      - {title: "CLIMA — C70 open-top railway wagon (длина 13 976 мм)", url: "http://www.railway-parts.com/wagons/c70.html", level: secondary}
+
+# Демонстрационный расчёт допустимой массы состава (по мотивам Правил тяговых расчётов, упрощённо).
+traction_calc:
+  passenger_mass_t: 0.1
+  # основное удельное сопротивление, Н/кН (= кгс/тс):
+  #   локомотив в режиме тяги:     w0' = a + b·v + c·v²
+  #   4-осный грузовой на роликах: w0'' = 0.7 + (3 + 0.1·v + 0.0025·v²) / q0, q0 — масса на ось, т
+  #   пассажирский вагон:          w0'' = 1.2 + 0.012·v + 0.0002·v²
+  loco_w0: [1.9, 0.01, 0.0003]

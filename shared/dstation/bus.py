@@ -7,6 +7,7 @@
   plan                     — применённый план (planner → simulator, api)
   variants                 — варианты плана при сбое (planner → api)
   planner:control          — управление планировщиком: применить вариант (api → planner)
+  micro:state              — кадры микромодели станции (simulator → api), события внутри кадра
 Ключи:
   latest:{world}, latest:plan, latest:variants — последние значения для быстрого старта
   config:index, config:planner                  — переопределения конфигурации (без перекомпиляции)
@@ -21,7 +22,7 @@ from typing import Any, AsyncIterator
 import redis.asyncio as aioredis
 
 STREAM_MAXLEN = {"state:ai": 200, "state:baseline": 200, "events": 5000, "commands": 1000,
-                 "plan": 200, "variants": 50, "planner:control": 100}
+                 "plan": 200, "variants": 50, "planner:control": 100, "micro:state": 100}
 
 
 def redis_url() -> str:

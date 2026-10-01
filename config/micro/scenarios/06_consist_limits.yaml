@@ -1,0 +1,24 @@
+id: consist_limits
+order: 6
+name: "6. Ограничения состава"
+description: >
+  2101 длиннее перегрузочного пути 7П — отказ в приёме. 3201 с электровозом KZ8A — пути не
+  электрифицированы (допущение демо). 3105 тяжелее допустимой для одного ТЭ33А массы на подъёме 9 ‰
+  в сторону запада — стоит до прицепки второго локомотива (в 09:20). 1005 запрошен на путь 3 колеи
+  1520 — несовместимая колея, принимается на 1К. 3106 с цистернами запрошен к платформе — условное
+  правило демо запрещает.
+seed: 16
+duration_h: 2.5
+trains:
+  - {id: "2101", kind: freight, loco: TE33A, wagons: [{model: "12-132", count: 48, load: empty}],
+     from: W, to: W, track: "7П", op: loading, arrive: "08:20", dwell_min: 120, depart: "10:30"}
+  - {id: "3201", kind: freight, loco: KZ8A, wagons: [{model: "12-132", count: 40, load: empty}],
+     from: W, to: E, op: through, arrive: "08:25", dwell_min: 20, depart: "08:50"}
+  - {id: "3105", kind: freight, loco: TE33A, wagons: [{model: "15-150-04", count: 50, load: full}],
+     from: E, to: W, op: through, arrive: "08:30", dwell_min: 20, depart: "08:55"}
+  - {id: "1005", kind: freight, loco: HXN5, wagons: [{model: C70, count: 30, load: empty}],
+     from: EK, to: EK, track: "3", op: through, arrive: "08:35", dwell_min: 20, depart: "09:00"}
+  - {id: "3106", kind: freight, loco: TE33A, wagons: [{model: "15-150-04", count: 10, load: full}],
+     from: W, to: E, track: "2", op: through, arrive: "09:10", dwell_min: 20, depart: "09:35"}
+events:
+  - {at: "09:20", cmd: {type: add_loco, train: "3105", model: TE33A, note: "прицепка второго локомотива (кратная тяга)"}}

@@ -1,0 +1,15 @@
+id: route_conflict
+order: 2
+name: "2. Конфликт маршрутов"
+description: >
+  Грузовой 3102 стоит на пути 3 и готов к отправлению на запад в 08:03. В это же время к западной
+  горловине подходит пассажирский 053 на путь 2. Оба маршрута проходят через участок 1СП, стрелку 1
+  и однопутный перегон ЗП. Диспетчер пропускает пассажирский (приоритет), грузовой ждёт.
+seed: 12
+duration_h: 1.5
+trains:
+  - {id: "3102", kind: freight, loco: TE33A, wagons: [{model: "12-132", count: 30, load: full}],
+     from: E, to: W, op: through, start_on: "3", depart: "08:03"}
+  - {id: "053", kind: passenger, loco: TE33A, wagons: [{model: "61-4440", count: 10, passengers: 30}],
+     from: W, to: W, track: "2", op: passenger, arrive: "08:12", dwell_min: 30, depart: "08:45"}
+events: []

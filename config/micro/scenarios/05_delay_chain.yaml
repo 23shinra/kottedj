@@ -1,0 +1,20 @@
+id: delay_chain
+order: 5
+name: "5. Цепочка задержек"
+description: >
+  Поезд 1001 (колея 1435) опаздывает на 90 мин. Порожний 2001 на 7П не может начать погрузку без
+  выгруженного груза, его отправление сдвигается. Следующий порожний 2002 не может занять 7П и
+  удерживается на соседней станции. На стороне 1435 поезд 1003 ждёт освобождения 4КП.
+seed: 15
+duration_h: 6
+trains:
+  - {id: "1001", kind: freight, loco: HXN5, wagons: [{model: C70, count: 40, load: full}],
+     from: EK, to: EK, track: "4КП", op: unloading, arrive: "08:15", dwell_min: 110, depart: "10:10"}
+  - {id: "2001", kind: freight, loco: TE33A, wagons: [{model: "12-132", count: 40, load: empty}],
+     from: W, to: W, track: "7П", op: loading, arrive: "08:35", dwell_min: 110, depart: "10:30"}
+  - {id: "1003", kind: freight, loco: HXN5, wagons: [{model: C70, count: 40, load: full}],
+     from: EK, to: EK, track: "4КП", op: unloading, arrive: "10:30", dwell_min: 110, depart: "12:25"}
+  - {id: "2002", kind: freight, loco: TE33A, wagons: [{model: "12-132", count: 40, load: empty}],
+     from: W, to: W, track: "7П", op: loading, arrive: "10:45", dwell_min: 110, depart: "12:40"}
+events:
+  - {at: "08:00", cmd: {type: delay, train: "1001", minutes: 90, note: "задержка на сопредельной станции"}}

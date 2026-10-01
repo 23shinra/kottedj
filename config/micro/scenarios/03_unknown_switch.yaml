@@ -1,0 +1,18 @@
+id: unknown_switch
+order: 3
+name: "3. Неизвестное положение стрелки"
+description: >
+  В 08:30 обрыв в кабельной муфте стрелки 5 — контроль положения потерян («?»). Все маршруты через
+  стрелку 5 запрещены. Транзитный 3101 получает объезд на главный путь I, порожний 2001 на 7П ждёт
+  у соседней станции: другого пути погрузки нет. После ремонта движение возобновляется.
+seed: 13
+duration_h: 4
+trains:
+  - {id: "1001", kind: freight, loco: HXN5, wagons: [{model: C70, count: 40, load: full}],
+     from: EK, to: EK, track: "4КП", op: unloading, arrive: "08:15", dwell_min: 120, depart: "10:30"}
+  - {id: "3101", kind: freight, loco: TE33A, wagons: [{model: "15-150-04", count: 35, load: full}],
+     from: W, to: E, track: "3", op: through, arrive: "08:45", dwell_min: 30, depart: "09:20"}
+  - {id: "2001", kind: freight, loco: TE33A, wagons: [{model: "12-132", count: 40, load: empty}],
+     from: W, to: W, track: "7П", op: loading, arrive: "09:05", dwell_min: 100, depart: "10:50"}
+events:
+  - {at: "08:30", cmd: {type: fault, device: "СМ-5", note: "обрыв жилы в кабельной муфте"}}

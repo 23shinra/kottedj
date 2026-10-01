@@ -1,0 +1,17 @@
+id: repair
+order: 4
+name: "4. Ремонт стрелки"
+description: >
+  В 08:25 механическая неисправность электропривода стрелки 3. Ремонтная задача назначается
+  электромеханику поста ЭЦ-1: выход 5 мин, ремонт 60 мин модельного времени (1 мин реального при ×60),
+  проверка 2 мин. Пассажирский 053 на путь 2 (маршрут только через стрелку 3) ждёт, после проверки
+  маршрут снова доступен.
+seed: 14
+duration_h: 2.5
+trains:
+  - {id: "3101", kind: freight, loco: TE33A, wagons: [{model: "15-150-04", count: 35, load: full}],
+     from: W, to: E, op: through, arrive: "08:40", dwell_min: 30, depart: "09:15"}
+  - {id: "053", kind: passenger, loco: TE33A, wagons: [{model: "61-4440", count: 10, passengers: 30}],
+     from: W, to: W, track: "2", op: passenger, arrive: "09:00", dwell_min: 30, depart: "09:35"}
+events:
+  - {at: "08:25", cmd: {type: fault, device: "СП-3", note: "механическая неисправность электропривода"}}

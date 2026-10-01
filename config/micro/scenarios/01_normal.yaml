@@ -1,0 +1,22 @@
+id: normal
+order: 1
+name: "1. Исправная станция"
+description: >
+  Шесть составов проходят маршруты без отказов: перегрузка 1435 → 1520 (выгрузка 1001 на 4КП,
+  погрузка 2001 на 7П), транзит цистерн и полувагонов, пассажирский поезд у платформы.
+seed: 11
+duration_h: 4
+trains:
+  - {id: "1001", kind: freight, loco: HXN5, wagons: [{model: C70, count: 40, load: full}],
+     from: EK, to: EK, track: "4КП", op: unloading, arrive: "08:15", dwell_min: 120, depart: "10:30"}
+  - {id: "2001", kind: freight, loco: TE33A, wagons: [{model: "12-132", count: 40, load: empty}],
+     from: W, to: W, track: "7П", op: loading, arrive: "08:35", dwell_min: 120, depart: "10:50"}
+  - {id: "3101", kind: freight, loco: TE33A, wagons: [{model: "15-150-04", count: 35, load: full}],
+     from: W, to: E, op: through, arrive: "08:50", dwell_min: 30, depart: "09:25"}
+  - {id: "053", kind: passenger, loco: TE33A, wagons: [{model: "61-4440", count: 10, passengers: 30}],
+     from: W, to: W, track: "2", op: passenger, arrive: "09:15", dwell_min: 40, depart: "10:00"}
+  - {id: "3102", kind: freight, loco: TE33A, wagons: [{model: "12-132", count: 30, load: full}],
+     from: E, to: W, op: through, arrive: "09:40", dwell_min: 30, depart: "10:15"}
+  - {id: "1002", kind: freight, loco: HXN5, wagons: [{model: C70, count: 35, load: empty}],
+     from: EK, to: EK, op: through, arrive: "09:20", dwell_min: 30, depart: "09:55"}
+events: []

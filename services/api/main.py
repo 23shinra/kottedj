@@ -2,11 +2,13 @@
 from __future__ import annotations
 
 import asyncio
+import os
 import random
 import time
 from contextlib import asynccontextmanager
 from typing import Any, Literal, Optional
 
+import httpx
 from fastapi import Depends, FastAPI, HTTPException, Query, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response
@@ -34,18 +36,22 @@ INDEX_G = Gauge("station_index", "Индекс эффективности ста
 
 
 # ===================================================================== hub
+COALESCED = ("frame", "micro")
+
+
 class Client:
     def __init__(self, ws: WebSocket, user: dict[str, Any]) -> None:
         self.ws, self.user = ws, user
-        self.queue: asyncio.Queue = asyncio.Queue(maxsize=200)
-        self.frame: dict[str, Any] | None = None    # слот последнего кадра: старые кадры не копятся
+        self.queue: asyncio.Queue = asyncio.Queue(maxsize=400)
+        self.slots: dict[str, dict[str, Any]] = {}   # слоты последних кадров: старые кадры не копятся
         self.wake = asyncio.Event()
 
     def push(self, msg: dict[str, Any]) -> None:
-        if msg.get("type") == "frame":
-            if self.frame is not None:
+        kind = msg.get("type")
+        if kind in COALESCED:
+            if kind in self.slots:
                 DROPPED.inc()
-            self.frame = msg
+            self.slots[kind] = msg
         else:
             if self.queue.full():
                 self.queue.get_nowait()
@@ -58,9 +64,10 @@ class Client:
             self.wake.clear()
             while not self.queue.empty():
                 await self.ws.send_text(bus.dumps(self.queue.get_nowait()))
-            if self.frame is not None:
-                f, self.frame = self.frame, None
-                await self.ws.send_text(bus.dumps(f))
+            for kind in COALESCED:
+                f = self.slots.pop(kind, None)
+                if f is not None:
+                    await self.ws.send_text(bus.dumps(f))
 
 
 class Hub:
@@ -79,6 +86,8 @@ class Hub:
         self.last_saved = 0.0
         self.last_plan_at = 0.0
         self.link: dict[str, Any] = {}
+        self.micro: dict[str, Any] | None = None
+        self.sim_url = os.environ.get("SIMULATOR_URL", "http://localhost:8001")
 
     def broadcast(self, msg: dict[str, Any]) -> None:
         for c in list(self.clients):
@@ -119,8 +128,17 @@ class Hub:
             setattr(self, slot, await bus.get_json(self.r, key))
         if self.plan:
             self.last_plan_at = time.time()
-        async for stream, msg in bus.subscribe(self.r, ["state:ai", "state:baseline", "plan", "variants", "events"]):
-            if stream.startswith("state:"):
+        self.micro = await bus.get_json(self.r, "latest:micro")
+        if self.micro:
+            self.micro.pop("events", None)
+        async for stream, msg in bus.subscribe(self.r, ["state:ai", "state:baseline", "plan", "variants", "events", "micro:state"]):
+            if stream == "micro:state":
+                evs = msg.pop("events", [])
+                if evs:
+                    self.broadcast({"type": "micro_events", "version": msg.get("version"), "events": evs})
+                self.micro = {"type": "micro", **msg}
+                self.broadcast(self.micro)
+            elif stream.startswith("state:"):
                 world = stream.split(":", 1)[1]
                 self.latest[world] = msg
                 if world == "ai":
@@ -168,6 +186,18 @@ class Hub:
 
     async def command(self, cmd: dict[str, Any]) -> None:
         await bus.publish(self.r, "commands", cmd)
+
+    async def sim_request(self, method: str, path: str, body: dict[str, Any] | None = None) -> Any:
+        try:
+            async with httpx.AsyncClient(base_url=self.sim_url, timeout=5) as http:
+                resp = await http.request(method, path, json=body)
+        except httpx.HTTPError as e:
+            log.warning("simulator_unreachable", path=path, error=str(e))
+            raise HTTPException(503, "Симулятор недоступен") from e
+        if resp.status_code == 404:
+            raise HTTPException(404, resp.json().get("detail", "не найдено"))
+        resp.raise_for_status()
+        return resp.json()
 
 
 hub = Hub()
@@ -224,6 +254,15 @@ class ApplyIn(BaseModel):
 
 class SpeedIn(BaseModel):
     time_scale: float = Field(ge=1, le=120)
+
+
+MICRO_ADMIN_COMMANDS = {"bonus_config", "repair_config", "restore"}
+
+
+class MicroCommandIn(BaseModel):
+    model_config = {"extra": "allow"}
+    type: Literal["run", "pause", "reset", "set_scale", "auto", "set_route", "cancel_route", "throw_switch",
+                  "hold", "fault", "delay", "add_loco", "restore", "bonus_config", "repair_config"]
 
 
 # ===================================================================== REST
@@ -340,6 +379,37 @@ async def sim_speed(body: SpeedIn, user: dict = Depends(auth.require("admin"))) 
     return {"status": "accepted", "time_scale": body.time_scale}
 
 
+@app.get("/api/micro/static", tags=["micro"])
+async def micro_static(_: dict = Depends(auth.require())) -> dict[str, Any]:
+    """Путевая схема, оборудование, справочник подвижного состава, персонал, сценарии, журнал."""
+    return await hub.sim_request("GET", "/micro/static")
+
+
+@app.get("/api/micro/state", tags=["micro"])
+async def micro_state(_: dict = Depends(auth.require())) -> dict[str, Any]:
+    return await hub.sim_request("GET", "/micro/frame")
+
+
+@app.get("/api/micro/card/{kind}/{oid}", tags=["micro"])
+async def micro_card(kind: Literal["train", "segment", "switch", "signal", "device", "worker", "loco", "wagon"],
+                     oid: str, _: dict = Depends(auth.require())) -> dict[str, Any]:
+    """Карточка объекта: справочная модель + состояние конкретного экземпляра."""
+    return await hub.sim_request("GET", f"/micro/card/{kind}/{oid}")
+
+
+@app.post("/api/micro/command", tags=["micro"])
+async def micro_command(body: MicroCommandIn, user: dict = Depends(auth.require("dispatcher"))) -> dict[str, Any]:
+    """Команда микромодели. Ручные маршруты и переводы стрелок проходят те же проверки, что и автодиспетчер;
+    при отказе возвращаются конкретные причины (blockers)."""
+    if body.type in MICRO_ADMIN_COMMANDS and auth.ROLES.get(user.get("role"), 0) < auth.ROLES["admin"]:
+        raise HTTPException(403, "Команда доступна только администратору")
+    cmd = body.model_dump()
+    cmd["source"] = f"{'администратор' if user.get('role') == 'admin' else 'диспетчер'} {user['sub']}"
+    res = await hub.sim_request("POST", "/micro/command", cmd)
+    log.info("micro_command", cmd=cmd, ok=res.get("ok"), user=user["sub"])
+    return res
+
+
 @app.get("/api/history/timeline", tags=["history"])
 async def timeline(minutes: float = Query(15, ge=1, le=72 * 60), _: dict = Depends(auth.require())) -> dict[str, Any]:
     return {"points": await hub.store.timeline(minutes)}
@@ -448,6 +518,8 @@ async def ws_live(ws: WebSocket, token: str = Query("")) -> None:
         client.push({"type": "events", "events": hub.events[-50:]})
     if hub.frame:
         client.push(hub.frame)
+    if hub.micro:
+        client.push(hub.micro)
     sender = asyncio.create_task(client.sender())
     try:
         while True:

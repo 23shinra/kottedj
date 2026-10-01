@@ -1,0 +1,20 @@
+id: bonus
+order: 8
+name: "8. Премирование (эксперимент)"
+description: >
+  Исправная работа закреплённого оборудования увеличивает условный премиальный баланс, простой и
+  ремонт уменьшают его. Муфта стрелки 12 ремонтируется 60 мин (без скидки), рельсовая цепь пути 4 —
+  20 мин (быстрое восстановление, скидка), отключение фидера Ф1 покрывается фидером Ф2, отказ
+  УВК-1.1 — переход на резервный комплект.
+seed: 18
+duration_h: 3
+trains:
+  - {id: "1001", kind: freight, loco: HXN5, wagons: [{model: C70, count: 40, load: full}],
+     from: EK, to: EK, track: "4КП", op: unloading, arrive: "08:15", dwell_min: 100, depart: "10:00"}
+  - {id: "3101", kind: freight, loco: TE33A, wagons: [{model: "15-150-04", count: 35, load: full}],
+     from: W, to: E, op: through, arrive: "08:50", dwell_min: 30, depart: "09:25"}
+events:
+  - {at: "08:20", cmd: {type: fault, device: "СМ-12", note: "замыкание в кабельной муфте"}}
+  - {at: "08:40", cmd: {type: fault, device: "РЦ-4", note: "ложная занятость", repair_min: 20}}
+  - {at: "09:00", cmd: {type: fault, device: "Ф1", note: "отключение фидера", repair_min: 40}}
+  - {at: "09:30", cmd: {type: fault, device: "УВК-1.1", note: "отказ комплекта УВК"}}

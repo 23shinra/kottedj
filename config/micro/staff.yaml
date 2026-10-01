@@ -1,0 +1,38 @@
+# Персонал, ремонт и экспериментальная модель премирования. Имена демонстрационные.
+staff:
+  - {id: "W1", name: "Ахметов Д.",    role: "Электромеханик СЦБ",        specialty: scb,    posts: ["1"]}
+  - {id: "W2", name: "Сериков А.",    role: "Электромеханик СЦБ",        specialty: scb,    posts: ["2"]}
+  - {id: "W3", name: "Ким В.",        role: "Электромеханик СЦБ",        specialty: scb,    posts: ["3"]}
+  - {id: "W4", name: "Жумабаев Е.",   role: "Инженер ВТ и связи",        specialty: it,     posts: ["1", "2", "3"]}
+  - {id: "W5", name: "Петренко О.",   role: "Электромонтёр энергоснабжения", specialty: power, posts: ["1", "2", "3"]}
+
+# Кто чинит какие устройства (kind устройства → специальность).
+specialty_by_kind:
+  switch_drive: scb
+  coupling: scb
+  signal_unit: scb
+  track_circuit: scb
+  ec_module: scb
+  uvk: it
+  lan_switch: it
+  power_panel: power
+  feeder: power
+
+repair:
+  default_duration_min: 60     # по заданию: 1 час модельного времени = 1 минута реального при ×60
+  travel_min: 5                # выход исполнителя к месту отказа
+  verify_min: 2                # проверка после ремонта
+  auto_assign: true
+
+# ЭКСПЕРИМЕНТАЛЬНАЯ модель премирования (гипотеза для обсуждения, не доказанно эффективна).
+# Считается условный премиальный баланс; базовая зарплата не моделируется.
+bonus:
+  initial_balance: 100.0
+  accrual_per_device_hour: 0.5     # у.е. за час исправной работы одного закреплённого устройства
+  stop_accrual_on_downtime: true   # не начислять за устройство, пока оно в простое
+  downtime_penalty_per_hour: 6.0   # у.е. за час простоя из-за собственного отказа устройства
+  penalize_upstream: false         # не штрафовать за простой из-за чужого отказа (например, фидера)
+  repair_cost: 10.0                # условная стоимость ремонта закреплённого устройства
+  fast_recovery_min: 45            # если восстановлено быстрее — скидка на стоимость ремонта
+  fast_recovery_discount: 0.5
+  min_balance: 0.0

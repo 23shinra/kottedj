@@ -1,0 +1,18 @@
+id: redundancy
+order: 9
+name: "9. Горячий резерв УВК (по мотивам фото)"
+description: >
+  В 08:30 отказывает комплект УВК-2.1 поста ЭЦ-2: работа продолжается на резервном УВК-2.2.
+  В 08:50 отказывает и УВК-2.2: стрелки восточной горловины теряют контроль, сигналы гаснут,
+  рельсовые цепи показывают занятость. Движение через восточную горловину останавливается до
+  восстановления хотя бы одного комплекта.
+seed: 19
+duration_h: 3
+trains:
+  - {id: "3101", kind: freight, loco: TE33A, wagons: [{model: "15-150-04", count: 35, load: full}],
+     from: W, to: E, op: through, arrive: "08:40", dwell_min: 20, depart: "09:05"}
+  - {id: "3102", kind: freight, loco: TE33A, wagons: [{model: "12-132", count: 30, load: full}],
+     from: E, to: W, op: through, arrive: "09:15", dwell_min: 20, depart: "09:40"}
+events:
+  - {at: "08:30", cmd: {type: fault, device: "УВК-2.1", note: "отказ комплекта УВК"}}
+  - {at: "08:50", cmd: {type: fault, device: "УВК-2.2", note: "отказ резервного комплекта УВК"}}

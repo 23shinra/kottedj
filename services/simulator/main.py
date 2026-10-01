@@ -8,17 +8,19 @@ from __future__ import annotations
 
 import asyncio
 import copy
+import os
 import random
 import time
 from contextlib import asynccontextmanager
 from typing import Any
 
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect
+from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect
 from fastapi.responses import PlainTextResponse
 from prometheus_client import CONTENT_TYPE_LATEST, Counter, Gauge, Histogram, generate_latest
 
 from dstation import bus
 from dstation.config import load_scenario
+from dstation.micro import MicroSim
 from dstation.obs import setup_logging
 from dstation.sim.runner import make_worlds
 from dstation.sim.timetable import generate
@@ -165,12 +167,62 @@ class Simulator:
                 self.command(msg)
 
 
+class MicroRunner:
+    """Микромодель станции: свой масштаб времени (по умолчанию 1 мин реального = 1 ч модельного),
+    пуск/пауза/сброс. Кадры публикуются в поток micro:state, команды применяются синхронно по HTTP."""
+
+    TICK_HZ = 10.0
+    PUBLISH_S = 0.5
+
+    def __init__(self) -> None:
+        self.m = MicroSim(os.environ.get("MICRO_SCENARIO", "normal"),
+                          running=os.environ.get("MICRO_AUTOSTART", "1") == "1")
+        self.pub_seq = 0
+        self.pub_version = self.m.version
+        self.dirty = True
+
+    def command(self, cmd: dict[str, Any]) -> dict[str, Any]:
+        source = str(cmd.pop("source", "диспетчер"))
+        res = self.m.command(cmd, source=source)
+        self.dirty = True
+        log.info("micro_command", cmd=cmd, ok=res.get("ok"), message=res.get("message"))
+        return res
+
+    def next_frame(self) -> dict[str, Any]:
+        if self.m.version != self.pub_version:
+            self.pub_version, self.pub_seq = self.m.version, 0
+        f = self.m.frame(self.pub_seq)
+        self.pub_seq = f["seq"]
+        f["emitted_at"] = int(time.time() * 1000)
+        return f
+
+    async def run(self) -> None:
+        r = bus.connect()
+        dt = 1.0 / self.TICK_HZ
+        next_t = time.perf_counter()
+        last_pub = 0.0
+        while True:
+            self.m.advance_real(dt)
+            now = time.perf_counter()
+            if self.dirty or now - last_pub >= self.PUBLISH_S:
+                self.dirty, last_pub = False, now
+                try:
+                    await bus.publish(r, "micro:state", self.next_frame(), latest_key="latest:micro")
+                except Exception as e:  # noqa: BLE001 — Redis недоступен: модель продолжает работать
+                    log.warning("micro_publish_failed", error=str(e))
+            next_t += dt
+            await asyncio.sleep(max(0.0, next_t - time.perf_counter()))
+            if time.perf_counter() - next_t > 1.0:
+                next_t = time.perf_counter()
+
+
 sim = Simulator()
+micro = MicroRunner()
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    tasks = [asyncio.create_task(sim.run()), asyncio.create_task(sim.consume_bus())]
+    tasks = [asyncio.create_task(sim.run()), asyncio.create_task(sim.consume_bus()), asyncio.create_task(micro.run())]
     log.info("simulator_started", scenario=sim.scn.get("name"), time_scale=sim.time_scale, tick_hz=sim.tick_hz)
     yield
     for t in tasks:
@@ -205,10 +257,35 @@ async def post_command(cmd: dict[str, Any]) -> dict[str, str]:
     return {"status": "ok"}
 
 
+@app.get("/micro/static")
+async def micro_static() -> dict[str, Any]:
+    return micro.m.static()
+
+
+@app.get("/micro/frame")
+async def micro_frame() -> dict[str, Any]:
+    return micro.m.frame(0)
+
+
+@app.get("/micro/card/{kind}/{oid}")
+async def micro_card(kind: str, oid: str) -> dict[str, Any]:
+    card = micro.m.world.card(kind, oid)
+    if card is None:
+        raise HTTPException(404, f"нет объекта {kind}/{oid}")
+    return card
+
+
+@app.post("/micro/command")
+async def micro_command(cmd: dict[str, Any]) -> dict[str, Any]:
+    return micro.command(cmd)
+
+
 @app.get("/health")
 async def health() -> dict[str, Any]:
     return {"status": "ok", "sim_time": sim.worlds["ai"].t, "time_scale": sim.time_scale,
-            "clients": len(sim.clients), "stress": time.time() < sim.stress_until}
+            "clients": len(sim.clients), "stress": time.time() < sim.stress_until,
+            "micro": {"scenario": micro.m.world.scn["id"], "t": micro.m.world.t, "running": micro.m.running,
+                      "scale": micro.m.scale}}
 
 
 @app.get("/metrics")

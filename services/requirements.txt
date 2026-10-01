@@ -10,3 +10,4 @@ prometheus-client>=0.21
 structlog>=24.4
 pyjwt>=2.9
 reportlab>=4.2
+httpx>=0.27

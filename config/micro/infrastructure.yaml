@@ -1,0 +1,158 @@
+# Путевое развитие станции для микромодели (участки, стрелки, сигналы).
+#
+# Топология создана «по мотивам» фото АРМ станции Достык (docs/source/track_scheme.png):
+# парк колеи 1520 мм с двумя горловинами, сквозной главный путь, тупиковый парк колеи 1435 мм
+# и перегрузочный фронт между ними. Номера путей, стрелок и сигналов на фото не читаются,
+# поэтому все обозначения ниже ДЕМОНСТРАЦИОННЫЕ (demo: true). Длины и скорости — условные.
+#
+# Соглашения:
+#   * все участки ориентированы с запада на восток: a — западный узел, b — восточный;
+#   * направление «E» — на восток (нечётные сигналы Н…), «W» — на запад (чётные Ч…);
+#   * координаты x/y — только для схемы в интерфейсе, расстояния берутся из length_m.
+name: "Станция Достык — микромодель (по мотивам, демо)"
+demo: true
+start_clock: "08:00"
+date: "2026-10-01"
+
+boundaries:
+  W:   {node: WB,  name: "Перегон Западный (1520)",          gauge: 1520, grade_permille: 9}
+  E:   {node: EB,  name: "Перегон к погранпереходу (1520)",  gauge: 1520, grade_permille: 6}
+  EK:  {node: EB2, name: "Перегон со стороны КНР (1435)",    gauge: 1435, grade_permille: 6}
+
+nodes:
+  # --- колея 1520: западная горловина
+  - {id: WB,   kind: boundary, x: 20,   y: 160, label: "к ст. З"}
+  - {id: NW0,  kind: joint,    x: 230,  y: 160}
+  - {id: S1,   kind: switch,   x: 300,  y: 160, switch: "1",  stem: "1СП",  normal: "1-3",  reverse: "1-5"}
+  - {id: S3,   kind: switch,   x: 380,  y: 160, switch: "3",  stem: "1-3",  normal: "3-I",  reverse: "3-2"}
+  - {id: S5,   kind: switch,   x: 380,  y: 220, switch: "5",  stem: "1-5",  normal: "5-3",  reverse: "5-7"}
+  - {id: S7,   kind: switch,   x: 440,  y: 280, switch: "7",  stem: "5-7",  normal: "7-4",  reverse: "7-9"}
+  - {id: S9,   kind: switch,   x: 500,  y: 340, switch: "9",  stem: "7-9",  normal: "9-5",  reverse: "9-11"}
+  - {id: S11,  kind: switch,   x: 560,  y: 400, switch: "11", stem: "9-11", normal: "11-6", reverse: "11-7П"}
+  - {id: TIW,  kind: joint,    x: 460,  y: 160}
+  - {id: T2W,  kind: joint,    x: 460,  y: 100}
+  - {id: T3W,  kind: joint,    x: 460,  y: 220}
+  - {id: T4W,  kind: joint,    x: 520,  y: 280}
+  - {id: T5W,  kind: joint,    x: 580,  y: 340}
+  - {id: T6W,  kind: joint,    x: 640,  y: 400}
+  - {id: T7W,  kind: joint,    x: 640,  y: 460}
+  # --- колея 1520: восточная горловина
+  - {id: TIE,  kind: joint,    x: 1140, y: 160}
+  - {id: T2E,  kind: joint,    x: 1140, y: 100}
+  - {id: T3E,  kind: joint,    x: 1140, y: 220}
+  - {id: T4E,  kind: joint,    x: 1080, y: 280}
+  - {id: T5E,  kind: joint,    x: 1020, y: 340}
+  - {id: T6E,  kind: joint,    x: 960,  y: 400}
+  - {id: B7,   kind: buffer,   x: 960,  y: 460, label: "упор"}
+  - {id: S10,  kind: switch,   x: 1100, y: 340, switch: "10", stem: "10-8", normal: "5-10", reverse: "6-10"}
+  - {id: S8,   kind: switch,   x: 1160, y: 280, switch: "8",  stem: "8-6",  normal: "4-8",  reverse: "10-8"}
+  - {id: S6,   kind: switch,   x: 1220, y: 220, switch: "6",  stem: "6-2",  normal: "3-6",  reverse: "8-6"}
+  - {id: S4,   kind: switch,   x: 1220, y: 160, switch: "4",  stem: "4-2",  normal: "I-4",  reverse: "2-4"}
+  - {id: S2,   kind: switch,   x: 1300, y: 160, switch: "2",  stem: "2СП",  normal: "4-2",  reverse: "6-2"}
+  - {id: NE0,  kind: joint,    x: 1370, y: 160}
+  - {id: EB,   kind: boundary, x: 1580, y: 160, label: "к погранпереходу"}
+  # --- колея 1435: тупиковый парк и перегрузочный фронт
+  - {id: B4K,  kind: buffer,   x: 700,  y: 520, label: "упор"}
+  - {id: B1K,  kind: buffer,   x: 760,  y: 600, label: "упор"}
+  - {id: B2K,  kind: buffer,   x: 760,  y: 660, label: "упор"}
+  - {id: B3K,  kind: buffer,   x: 760,  y: 720, label: "упор"}
+  - {id: T4KE, kind: joint,    x: 1140, y: 520}
+  - {id: T1KE, kind: joint,    x: 1140, y: 600}
+  - {id: T2KE, kind: joint,    x: 1140, y: 660}
+  - {id: T3KE, kind: joint,    x: 1140, y: 720}
+  - {id: S14,  kind: switch,   x: 1220, y: 600, switch: "14", stem: "14-12", normal: "1К-14", reverse: "4КП-14"}
+  - {id: S16,  kind: switch,   x: 1220, y: 660, switch: "16", stem: "16-12", normal: "2К-16", reverse: "3К-16"}
+  - {id: S12,  kind: switch,   x: 1300, y: 600, switch: "12", stem: "12СП",  normal: "14-12", reverse: "16-12"}
+  - {id: NE1,  kind: joint,    x: 1370, y: 600}
+  - {id: EB2,  kind: boundary, x: 1580, y: 600, label: "со стороны КНР"}
+
+# kind: approach — перегон; throat — стрелочный/изолированный участок горловины; track — станционный путь.
+# ops — какие операции разрешены на пути: through (пропуск, техосмотр), passenger (посадка/высадка),
+#       loading (погрузка), unloading (выгрузка), stabling (временный отстой).
+segments:
+  # перегоны (однопутные, упрощение: один поезд на перегоне)
+  - {id: "ЗП",   name: "Перегон Западный",            a: WB,   b: NW0,  length_m: 4000, vmax_kmh: 80, gauge: 1520, kind: approach}
+  - {id: "ВП",   name: "Перегон к погранпереходу",    a: NE0,  b: EB,   length_m: 4000, vmax_kmh: 60, gauge: 1520, kind: approach}
+  - {id: "ВП-К", name: "Перегон со стороны КНР",      a: NE1,  b: EB2,  length_m: 4000, vmax_kmh: 60, gauge: 1435, kind: approach}
+  # западная горловина 1520
+  - {id: "1СП",   a: NW0, b: S1,  length_m: 90,  vmax_kmh: 60, gauge: 1520, kind: throat}
+  - {id: "1-3",   a: S1,  b: S3,  length_m: 80,  vmax_kmh: 60, gauge: 1520, kind: throat}
+  - {id: "1-5",   a: S1,  b: S5,  length_m: 90,  vmax_kmh: 40, gauge: 1520, kind: throat}
+  - {id: "3-I",   a: S3,  b: TIW, length_m: 70,  vmax_kmh: 60, gauge: 1520, kind: throat}
+  - {id: "3-2",   a: S3,  b: T2W, length_m: 90,  vmax_kmh: 40, gauge: 1520, kind: throat}
+  - {id: "5-3",   a: S5,  b: T3W, length_m: 70,  vmax_kmh: 40, gauge: 1520, kind: throat}
+  - {id: "5-7",   a: S5,  b: S7,  length_m: 90,  vmax_kmh: 40, gauge: 1520, kind: throat}
+  - {id: "7-4",   a: S7,  b: T4W, length_m: 70,  vmax_kmh: 40, gauge: 1520, kind: throat}
+  - {id: "7-9",   a: S7,  b: S9,  length_m: 90,  vmax_kmh: 40, gauge: 1520, kind: throat}
+  - {id: "9-5",   a: S9,  b: T5W, length_m: 70,  vmax_kmh: 40, gauge: 1520, kind: throat}
+  - {id: "9-11",  a: S9,  b: S11, length_m: 90,  vmax_kmh: 40, gauge: 1520, kind: throat}
+  - {id: "11-6",  a: S11, b: T6W, length_m: 70,  vmax_kmh: 25, gauge: 1520, kind: throat}
+  - {id: "11-7П", a: S11, b: T7W, length_m: 90,  vmax_kmh: 25, gauge: 1520, kind: throat}
+  # станционные пути 1520
+  - {id: "I",  name: "Главный путь I",        a: TIW, b: TIE, length_m: 1050, vmax_kmh: 60, gauge: 1520, kind: track, park: "1520", ops: [through]}
+  - {id: "2",  name: "Путь 2 (у платформы)",  a: T2W, b: T2E, length_m: 850,  vmax_kmh: 40, gauge: 1520, kind: track, park: "1520", ops: [passenger], platform: true}
+  - {id: "3",  name: "Приёмо-отправочный 3",  a: T3W, b: T3E, length_m: 900,  vmax_kmh: 40, gauge: 1520, kind: track, park: "1520", ops: [through]}
+  - {id: "4",  name: "Приёмо-отправочный 4",  a: T4W, b: T4E, length_m: 950,  vmax_kmh: 40, gauge: 1520, kind: track, park: "1520", ops: [through]}
+  - {id: "5",  name: "Приёмо-отправочный 5",  a: T5W, b: T5E, length_m: 1050, vmax_kmh: 40, gauge: 1520, kind: track, park: "1520", ops: [through]}
+  - {id: "6",  name: "Путь 6 (отстой)",       a: T6W, b: T6E, length_m: 750,  vmax_kmh: 25, gauge: 1520, kind: track, park: "1520", ops: [stabling]}
+  - {id: "7П", name: "Перегрузочный 7П (1520, погрузка)", a: T7W, b: B7, length_m: 620, vmax_kmh: 15, gauge: 1520, kind: track, park: "Перегрузка", ops: [loading],
+     restrictions: ["тупик: выезд только в сторону западной горловины", "скорость 15 км/ч у перегрузочного фронта"]}
+  # восточная горловина 1520
+  - {id: "I-4",  a: TIE, b: S4,  length_m: 70, vmax_kmh: 60, gauge: 1520, kind: throat}
+  - {id: "2-4",  a: T2E, b: S4,  length_m: 90, vmax_kmh: 40, gauge: 1520, kind: throat}
+  - {id: "3-6",  a: T3E, b: S6,  length_m: 70, vmax_kmh: 40, gauge: 1520, kind: throat}
+  - {id: "4-8",  a: T4E, b: S8,  length_m: 70, vmax_kmh: 40, gauge: 1520, kind: throat}
+  - {id: "5-10", a: T5E, b: S10, length_m: 70, vmax_kmh: 40, gauge: 1520, kind: throat}
+  - {id: "6-10", a: T6E, b: S10, length_m: 90, vmax_kmh: 25, gauge: 1520, kind: throat}
+  - {id: "10-8", a: S10, b: S8,  length_m: 90, vmax_kmh: 40, gauge: 1520, kind: throat}
+  - {id: "8-6",  a: S8,  b: S6,  length_m: 90, vmax_kmh: 40, gauge: 1520, kind: throat}
+  - {id: "6-2",  a: S6,  b: S2,  length_m: 90, vmax_kmh: 40, gauge: 1520, kind: throat}
+  - {id: "4-2",  a: S4,  b: S2,  length_m: 80, vmax_kmh: 60, gauge: 1520, kind: throat}
+  - {id: "2СП",  a: S2,  b: NE0, length_m: 90, vmax_kmh: 60, gauge: 1520, kind: throat}
+  # парк 1435 (тупиковый, выезд на восток)
+  - {id: "4КП", name: "Перегрузочный 4КП (1435, выгрузка)", a: B4K, b: T4KE, length_m: 650, vmax_kmh: 15, gauge: 1435, kind: track, park: "Перегрузка", ops: [unloading],
+     restrictions: ["тупик: выезд только в сторону восточной горловины", "скорость 15 км/ч у перегрузочного фронта"]}
+  - {id: "1К",  name: "Приёмо-отправочный 1К (1435)", a: B1K, b: T1KE, length_m: 850, vmax_kmh: 25, gauge: 1435, kind: track, park: "1435", ops: [through]}
+  - {id: "2К",  name: "Приёмо-отправочный 2К (1435)", a: B2K, b: T2KE, length_m: 850, vmax_kmh: 25, gauge: 1435, kind: track, park: "1435", ops: [through]}
+  - {id: "3К",  name: "Путь 3К (1435, отстой)",       a: B3K, b: T3KE, length_m: 700, vmax_kmh: 25, gauge: 1435, kind: track, park: "1435", ops: [stabling]}
+  - {id: "4КП-14", a: T4KE, b: S14, length_m: 90, vmax_kmh: 25, gauge: 1435, kind: throat}
+  - {id: "1К-14",  a: T1KE, b: S14, length_m: 70, vmax_kmh: 40, gauge: 1435, kind: throat}
+  - {id: "2К-16",  a: T2KE, b: S16, length_m: 70, vmax_kmh: 40, gauge: 1435, kind: throat}
+  - {id: "3К-16",  a: T3KE, b: S16, length_m: 90, vmax_kmh: 25, gauge: 1435, kind: throat}
+  - {id: "14-12",  a: S14,  b: S12, length_m: 80, vmax_kmh: 40, gauge: 1435, kind: throat}
+  - {id: "16-12",  a: S16,  b: S12, length_m: 90, vmax_kmh: 40, gauge: 1435, kind: throat}
+  - {id: "12СП",   a: S12,  b: NE1, length_m: 90, vmax_kmh: 40, gauge: 1435, kind: throat}
+
+# Время перевода стрелки (электропривод) — условное.
+switch_throw_s: 6
+
+# Темп перегрузки 1435 → 1520 на фронте 4КП/7П, т/ч (условный: 40 полувагонов ≈ 1,5 ч).
+transshipment_t_per_h: 1800
+
+# Сигналы стоят в узле и ограждают вход в следующий участок в направлении dir.
+signals:
+  - {id: "Н",    node: NW0,  dir: E, kind: entry, name: "Входной Н"}
+  - {id: "Ч",    node: NE0,  dir: W, kind: entry, name: "Входной Ч"}
+  - {id: "ЧК",   node: NE1,  dir: W, kind: entry, name: "Входной ЧК (1435)"}
+  - {id: "ЧI",   node: TIW,  dir: W, kind: exit}
+  - {id: "Ч2",   node: T2W,  dir: W, kind: exit}
+  - {id: "Ч3",   node: T3W,  dir: W, kind: exit}
+  - {id: "Ч4",   node: T4W,  dir: W, kind: exit}
+  - {id: "Ч5",   node: T5W,  dir: W, kind: exit}
+  - {id: "Ч6",   node: T6W,  dir: W, kind: exit}
+  - {id: "Ч7П",  node: T7W,  dir: W, kind: exit}
+  - {id: "НI",   node: TIE,  dir: E, kind: exit}
+  - {id: "Н2",   node: T2E,  dir: E, kind: exit}
+  - {id: "Н3",   node: T3E,  dir: E, kind: exit}
+  - {id: "Н4",   node: T4E,  dir: E, kind: exit}
+  - {id: "Н5",   node: T5E,  dir: E, kind: exit}
+  - {id: "Н6",   node: T6E,  dir: E, kind: exit}
+  - {id: "Н1К",  node: T1KE, dir: E, kind: exit}
+  - {id: "Н2К",  node: T2KE, dir: E, kind: exit}
+  - {id: "Н3К",  node: T3KE, dir: E, kind: exit}
+  - {id: "Н4КП", node: T4KE, dir: E, kind: exit}
+
+# Электрификация: по данным КТЖ на участке Актогай — Достык работают тепловозы ТЭ33А
+# (см. docs/rolling_stock_sources.md). Актуальный статус электрификации не проверялся,
+# поэтому в демо пути станции считаются НЕэлектрифицированными (допущение).
+electrified: false

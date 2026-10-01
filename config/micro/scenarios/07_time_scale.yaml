@@ -1,0 +1,12 @@
+id: time_scale
+order: 7
+name: "7. Масштаб времени"
+description: >
+  Один пассажирский поезд со стоянкой ровно 60 мин. При ×60 стоянка занимает 60 секунд реального
+  времени. Пауза останавливает движение, стоянку, ремонт и начисление премии.
+seed: 17
+duration_h: 1.5
+trains:
+  - {id: "053", kind: passenger, loco: TE33A, wagons: [{model: "61-4440", count: 10, passengers: 30}],
+     from: W, to: W, track: "2", op: passenger, arrive: "08:10", dwell_min: 60, depart: "09:10"}
+events: []

@@ -51,6 +51,7 @@ services:
     environment:
       <<: *pyenv
       DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+      SIMULATOR_URL: http://simulator:8001
     command: ["uvicorn", "api.main:app", "--app-dir", "services", "--host", "0.0.0.0", "--port", "8000"]
     depends_on:
       redis: { condition: service_healthy }
