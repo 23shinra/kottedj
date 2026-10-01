@@ -137,6 +137,7 @@ class Ingest:
             try:
                 async with websockets.connect(SOURCE_URL, max_size=16 * 2 ** 20, ping_interval=5, ping_timeout=10) as ws:
                     self.connected, self.attempt, backoff = True, 0, 0.5
+                    self.norm = Normalizer()           # seq нумеруется заново в каждом сеансе источника
                     LINK_UP.set(1)
                     await self.r.set("link:simulator", json.dumps({"status": "up", "at": time.time()}))
                     log.info("source_connected", url=SOURCE_URL)
